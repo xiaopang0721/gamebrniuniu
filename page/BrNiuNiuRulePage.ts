@@ -49,7 +49,7 @@ module gamebrniuniu.page {
 
 			this._viewUI.txt_wanfa.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_WANFA_JIESHAO;
 			this._viewUI.txt_leixing.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_LEIXING;
-			this._viewUI.txt_daxiao.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_DAXIAO;
+			// this._viewUI.txt_daxiao.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_DAXIAO;
 			this._viewUI.txt_beishu.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_BEISHU;
 		}
 

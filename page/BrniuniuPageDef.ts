@@ -31,11 +31,7 @@ module gamebrniuniu.page {
 		static myinit(str: string) {
 			super.myinit(str);
 			BrniuniuClip.init();
-			if (WebConfig.baseplatform == PageDef.BASE_PLATFORM_TYPE_NQP) {
-				PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU] = BrNiuNiuPage;
-			} else {
-				PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU] = BrNiuNiuPageOld;
-			}
+			PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU] = BrNiuNiuPage;
 			PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU_MAP] = BrNiuNiuMapPage;
 			PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU_BEGIN] = BrNiuNiuBeginPage;
 			PageDef._pageClassMap[BrniuniuPageDef.PAGE_NIUNIU_TONGSHA] = BrNiuNiuTongShaPage;
