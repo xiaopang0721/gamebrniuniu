@@ -3,7 +3,7 @@
 */
 module gamebrniuniu.page{
 	export class BrNiuNiuBeginPage extends game.gui.base.Page {
-		private _viewUI: ui.game_ui.brniuniu.GoUI;
+		private _viewUI: ui.nqp.game_ui.brniuniu.GoUI;
 		
 		constructor(v: Game, onOpenFunc?: Function, onCloseFunc?: Function) {
 			super(v, onOpenFunc, onCloseFunc);
