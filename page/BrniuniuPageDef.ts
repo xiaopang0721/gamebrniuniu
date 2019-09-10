@@ -14,18 +14,18 @@ module gamebrniuniu.page {
 		static PAGE_NIUNIU_TONGSHA: string = "4";
 		//牛牛游戏通赔界面
 		static PAGE_NIUNIU_TONGPEI: string = "5";
+		//百人牛牛游戏匹配界面
+		static PAGE_BRNIUNIU_PIPEI: string = "6";
+		//百人牛牛玩家列表界面
+		static PAGE_BRNIUNIU_PLAYER_LIST: string = "7";
+		//百人牛牛停止下注界面
+		static PAGE_BRNIUNIU_END: string = "8";
+		//百人牛牛上庄列表界面
+		static PAGE_BRNIUNIU_SZ_LIST: string = "9";
+		//百人牛牛结算界面
+		static PAGE_BRNIUNIU_SETTLE: string = "10";
 		//百人牛牛游戏规则界面
 		static PAGE_BRNIUNIU_RULE: string = "101";
-		//百人牛牛游戏匹配界面
-		static PAGE_BRNIUNIU_PIPEI: string = "7";
-		//百人牛牛玩家列表界面
-		static PAGE_BRNIUNIU_PLAYER_LIST: string = "11";
-		//百人牛牛停止下注界面
-		static PAGE_BRNIUNIU_END: string = "12";
-		//百人牛牛上庄列表界面
-		static PAGE_BRNIUNIU_SZ_LIST: string = "13";
-		//百人牛牛结算界面
-		static PAGE_BRNIUNIU_SETTLE: string = "14";
 
 
 		static myinit(str: string) {
