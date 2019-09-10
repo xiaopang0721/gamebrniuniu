@@ -19,6 +19,7 @@ module gamebrniuniu.page {
 			this._asset = [
 				Path_game_brniuniu.atlas_game_ui + "brniuniu.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
+				PathGameTongyong.atlas_game_ui_tongyong + "dating.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "hud.atlas",
 			];
 		}
