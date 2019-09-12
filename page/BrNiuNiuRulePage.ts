@@ -5,9 +5,7 @@ module gamebrniuniu.page {
 	const enum TYPE_INDEX {
 		TYPE_WANFA_JIESHAO = 0,
 		TYPE_CARD_LEIXING = 1,
-		TYPE_CARD_DAXIAO = 2,
-		TYPE_CARD_BEISHU = 3,
-		TYPE_GUANYU_WOMEN = 4,
+		TYPE_CARD_BEISHU = 2,
 	}
 	export class BrNiuNiuRulePage extends game.gui.base.Page {
 		private _viewUI: ui.nqp.game_ui.brniuniu.BaiRenNN_GuiZeUI;
@@ -47,10 +45,8 @@ module gamebrniuniu.page {
 		}
 
 		private selectHandler(index: number): void {
-
 			this._viewUI.txt_wanfa.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_WANFA_JIESHAO;
 			this._viewUI.txt_leixing.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_LEIXING;
-			// this._viewUI.txt_daxiao.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_DAXIAO;
 			this._viewUI.txt_beishu.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_BEISHU;
 		}
 
