@@ -103,7 +103,7 @@ module gamebrniuniu.story {
 
 		createObj() {
 			let card = this._game.sceneObjectMgr.createOfflineObject(SceneRoot.CARD_MARK, BrNiuNiuData) as BrNiuNiuData;
-			card.pos = new Vector2(900, 177);
+			card.pos = new Vector2(900, 170);
 			return card;
 		}
 

@@ -740,6 +740,9 @@ module gamebrniuniu.page {
             this._viewUI.img_banker.visible = this._curStatus < MAP_STATUS.PLAY_STATUS_PUSH_CARD || this._curStatus >= MAP_STATUS.PLAY_STATUS_RELAX;
             this._viewUI.box_status.visible = !(this._curStatus == MAP_STATUS.PLAY_STATUS_WASH_CARD || this._curStatus == MAP_STATUS.PLAY_STATUS_STOP_BET);
             this._viewUI.paixie.cards.visible = this._curStatus >= MAP_STATUS.PLAY_STATUS_WASH_CARD || this._curStatus == MAP_STATUS.PLAY_STATUS_STOP_BET;
+            if (this._curStatus > MAP_STATUS.PLAY_STATUS_WASH_CARD) {
+                this._viewUI.paixie.ani_chupai.gotoAndStop(12);
+            }
             if (this._game.uiRoot.HUD.isOpened(BrniuniuPageDef.PAGE_NIUNIU_TONGSHA) && this._curStatus >= MAP_STATUS.PLAY_STATUS_WASH_CARD) {
                 this._pageHandle.pushClose({ id: BrniuniuPageDef.PAGE_NIUNIU_TONGSHA, parent: this._game.uiRoot.HUD });
             }
@@ -1221,7 +1224,7 @@ module gamebrniuniu.page {
                             }
                         }
                     } else {
-                    this._seatUIList[i].img_qifu.visible = false;
+                        this._seatUIList[i].img_qifu.visible = false;
                     }
                 } else {
                     (this._seatUIList[i] as ui.nqp.game_ui.brniuniu.component.TouXiangWzUI).txt_name.text = "";
@@ -1312,8 +1315,7 @@ module gamebrniuniu.page {
             this._viewUI.banker_cards.visible = false;
             this._viewUI.box_time.visible = false;
             this._viewUI.xipai.visible = false;
-            this._viewUI.paixie.ani_chupai.stop();
-            this._viewUI.paixie.ani2.gotoAndStop(0)
+            this._viewUI.paixie.ani2.gotoAndStop(0);
             this._viewUI.btn_repeat.disabled = true;
         }
 
