@@ -11,17 +11,17 @@ module gamebrniuniu.page {
 			this._isNeedBlack = true;
 			this._isClickBlack = false;
 			this._asset = [
-				PathGameTongyong.atlas_game_ui_tongyong+ "general.atlas",
+				PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "touxiang.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "dating.atlas",
-				PathGameTongyong.atlas_game_ui_tongyong+ "hud.atlas",
+				PathGameTongyong.atlas_game_ui_tongyong + "hud.atlas",
 			];
 		}
 
 		protected init(): void {
 			this._viewUI = this.createView('game_ui.tongyong.ShangZhuangLBUI');
 			this.addChild(this._viewUI);
-			
+
 		}
 
 		// 页面打开时执行函数
@@ -141,6 +141,7 @@ module gamebrniuniu.page {
 				this._clipMoney = new BrniuniuClip(BrniuniuClip.MONEY_FONT2)
 				this._clipMoney.x = this.clip_money.x;
 				this._clipMoney.y = this.clip_money.y;
+				this._clipMoney.scale(0.85, 0.85);
 				this.clip_money.parent.addChild(this._clipMoney);
 				this.clip_money.visible = false;
 			}
