@@ -32,10 +32,6 @@ module gamebrniuniu.page {
 		// 页面打开时执行函数
 		protected onOpen(): void {
 			super.onOpen();
-			this._viewUI.txt_beishu.vScrollBarSkin = "";
-			this._viewUI.txt_beishu.vScrollBar.autoHide = true;
-			this._viewUI.txt_beishu.vScrollBar.elasticDistance = 100;
-			//更新滚动条最大滚动数值
 			this._viewUI.btn_tab.selectHandler = Handler.create(this, this.selectHandler, null, false);
 			if (this.dataSource) {
 				this._viewUI.btn_tab.selectedIndex = this.dataSource;
