@@ -208,8 +208,7 @@ module gamebrniuniu.page {
         }
 
         private onUpdateAniDeal(): void {
-            this._viewUI.ani_deal.ani1.stop();
-            this._viewUI.ani_deal.visible = false;
+            this._viewUI.paixie.ani2.gotoAndStop(0);
         }
 
         private onSeeCardOver(index: number): void {
@@ -233,8 +232,7 @@ module gamebrniuniu.page {
                 this.onUpdateChipGrey();
                 this.updateRoad();
                 if (!this._niuMgr.isReDrawCards) {
-                    this._viewUI.ani_deal.ani1.stop();
-                    this._viewUI.ani_deal.visible = false;
+                    this._viewUI.paixie.ani2.gotoAndStop(0)
                 }
             }
         }
@@ -805,8 +803,7 @@ module gamebrniuniu.page {
                 case MAP_STATUS.PLAY_STATUS_PUSH_CARD:// 发牌阶段
                     this._pageHandle.pushClose({ id: BrniuniuPageDef.PAGE_BRNIUNIU_END, parent: this._game.uiRoot.HUD });
                     this._viewUI.txt_status.index = 4;
-                    this._viewUI.ani_deal.visible = true;
-                    this._viewUI.ani_deal.ani1.play(0, true);
+                    this._viewUI.paixie.ani2.play(0, true);
                     let isBet = this._betMain0 + this._betMain1 + this._betMain2 + this._betMain3 > 0;
                     isBet && (this._rebetList[0] = this._betMain0);
                     isBet && (this._rebetList[1] = this._betMain1);
@@ -1306,8 +1303,7 @@ module gamebrniuniu.page {
             this._viewUI.box_time.visible = false;
             this._viewUI.xipai.visible = false;
             this._viewUI.paixie.ani_chupai.stop();
-            this._viewUI.ani_deal.ani1.stop();
-            this._viewUI.ani_deal.visible = false;
+            this._viewUI.paixie.ani2.gotoAndStop(0)
             this._viewUI.btn_repeat.disabled = true;
         }
 
@@ -1541,7 +1537,7 @@ module gamebrniuniu.page {
                 this._seatUIList = [];
                 this._chipHuang = [];
                 this._viewUI.paixie.ani_chupai.stop();
-                this._viewUI.ani_deal.ani1.stop();
+                this._viewUI.paixie.ani2.gotoAndStop(0)
                 this.resetAll();
                 if (this._niuMgr) {
                     this._niuMgr.off(BrNiuNiuMgr.DEAL_OVER, this, this.onUpdateAniDeal);

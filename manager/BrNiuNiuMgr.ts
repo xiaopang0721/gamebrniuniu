@@ -315,7 +315,7 @@ module gamebrniuniu.manager {
 			let counter = 0;
 			for (let j: number = 0; j < CARDS_NUM; j++) {
 				for (let i: number = 0; i < this._cards.length / CARDS_NUM; i++) {
-					Laya.timer.once(150 * count, this, () => {
+					Laya.timer.once(120 * count, this, () => {
 						this._game.playSound(PathGameTongyong.music_tongyong + "fapai.mp3", false);
 						let card = this._cards[i * CARDS_NUM + j];
 						if (!card) return;
