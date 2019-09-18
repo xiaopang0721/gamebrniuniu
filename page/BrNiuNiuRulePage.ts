@@ -27,6 +27,13 @@ module gamebrniuniu.page {
 			this._viewUI = this.createView('game_ui.brniuniu.BaiRenNN_GuiZeUI');
 			this.addChild(this._viewUI);
 
+			this._viewUI.txt_beishu.vScrollBarSkin = "";
+			this._viewUI.txt_beishu.vScrollBar.autoHide = true;
+			this._viewUI.txt_beishu.vScrollBar.elasticDistance = 100;
+			
+			this._viewUI.txt_leixing.vScrollBarSkin = "";
+			this._viewUI.txt_leixing.vScrollBar.autoHide = true;
+			this._viewUI.txt_leixing.vScrollBar.elasticDistance = 100;
 		}
 
 		// 页面打开时执行函数
