@@ -1489,7 +1489,6 @@ module gamebrniuniu.page {
             this._game.sceneObjectMgr.off(BrniuniuMapInfo.EVENT_SZ_LIST, this, this.updateBanker);//上庄列表更新
             this._game.sceneObjectMgr.off(BrniuniuMapInfo.EVENT_SYSTEM_MONEY_CHANGE, this, this.updateBanker);//系统庄金币更新
             this._game.sceneObjectMgr.off(BrniuniuMapInfo.EVENT_ROAD_RECORD_CHANGE, this, this.updateRoad);//大路信息更新
-            this._game.qifuMgr.off(QiFuMgr.QIFU_FLY, this, this.qifuFly);
         }
 
         public close(): void {
