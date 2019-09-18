@@ -168,7 +168,7 @@ module gamebrniuniu.page {
             this._game.sceneObjectMgr.on(BrniuniuMapInfo.EVENT_SZ_LIST, this, this.updateBanker);//上庄列表更新
             this._game.sceneObjectMgr.on(BrniuniuMapInfo.EVENT_SYSTEM_MONEY_CHANGE, this, this.updateBanker);//系统庄金币更新
             this._game.sceneObjectMgr.on(BrniuniuMapInfo.EVENT_ROAD_RECORD_CHANGE, this, this.updateRoad);//大路信息更新
-            this._game.network.addHanlder(Protocols.SMSG_OPERATION_FAILED, this, this.onOptHandler);
+            this._game.qifuMgr.on(QiFuMgr.QIFU_FLY, this, this.qifuFly);
             this.onUpdateRecord();
             this.onUpdateUnitOffline();
             this.onUpdateSeatedList();
@@ -376,21 +376,14 @@ module gamebrniuniu.page {
 
         private _nameStrInfo: string[] = ["xs", "px", "gsy", "gg", "cs", "tdg"];
         private _qifuTypeImgUrl: string;
-        protected onOptHandler(optcode: number, msg: any) {
-            if (msg.type == Operation_Fields.OPRATE_GAME) {
-                switch (msg.reason) {
-                    case Operation_Fields.OPRATE_GAME_QIFU_SUCCESS_RESULT:
-                        let dataInfo = JSON.parse(msg.data);
-                        //打开祈福动画界面
-                        this._game.uiRoot.general.open(TongyongPageDef.PAGE_TONGYONG_QIFU_ANI, (page) => {
-                            page.dataSource = StringU.substitute(PathGameTongyong.ui_tongyong_qifu + "f_{0}1.png", this._nameStrInfo[dataInfo.qf_id - 1]);
-                        });
-                        //相对应的玩家精灵做出反应
-                        this._qifuTypeImgUrl = StringU.substitute(PathGameTongyong.ui_tongyong_qifu + "f_{0}2.png", this._nameStrInfo[dataInfo.qf_id - 1]);
-                        this.onUpdateUnit(dataInfo.qifu_index);
-                        break;
-                }
-            }
+        private qifuFly(dataSource: any): void {
+            if (!dataSource) return;
+            let dataInfo = dataSource;
+            this._game.qifuMgr.showFlayAni(this._viewUI.main_player, this._viewUI, dataSource, (dataInfo) => {
+                //相对应的玩家精灵做出反应
+                this._qifuTypeImgUrl = StringU.substitute(PathGameTongyong.ui_tongyong_qifu + "f_{0}2.png", this._nameStrInfo[dataInfo.qf_id - 1]);
+                this.onUpdateUnit(dataInfo.qifu_index);
+            });
         }
 
         private updateOnline(): void {
@@ -911,7 +904,7 @@ module gamebrniuniu.page {
                     this._game.uiRoot.general.open(BrniuniuPageDef.PAGE_BRNIUNIU_PLAYER_LIST);
                     break;
                 case this._viewUI.btn_qifu://祈福
-                    this._game.uiRoot.general.open(TongyongPageDef.PAGE_TONGYONG_QIFU);
+                    this._game.uiRoot.general.open(DatingPageDef.PAGE_QIFU);
                     break;
                 case this._viewUI.btn_shangzhuang://申请上庄
                     if (this.showIsGuest()) return;
@@ -1496,7 +1489,7 @@ module gamebrniuniu.page {
             this._game.sceneObjectMgr.off(BrniuniuMapInfo.EVENT_SZ_LIST, this, this.updateBanker);//上庄列表更新
             this._game.sceneObjectMgr.off(BrniuniuMapInfo.EVENT_SYSTEM_MONEY_CHANGE, this, this.updateBanker);//系统庄金币更新
             this._game.sceneObjectMgr.off(BrniuniuMapInfo.EVENT_ROAD_RECORD_CHANGE, this, this.updateRoad);//大路信息更新
-            this._game.network.removeHanlder(Protocols.SMSG_OPERATION_FAILED, this, this.onOptHandler);
+            this._game.qifuMgr.off(QiFuMgr.QIFU_FLY, this, this.qifuFly);
         }
 
         public close(): void {
@@ -1532,7 +1525,7 @@ module gamebrniuniu.page {
                 this._game.sceneObjectMgr.off(BrniuniuMapInfo.EVENT_SZ_LIST, this, this.updateBanker);//上庄列表更新
                 this._game.sceneObjectMgr.off(BrniuniuMapInfo.EVENT_SYSTEM_MONEY_CHANGE, this, this.updateBanker);//系统庄金币更新
                 this._game.sceneObjectMgr.off(BrniuniuMapInfo.EVENT_ROAD_RECORD_CHANGE, this, this.updateRoad);//大路信息更新
-                this._game.network.removeHanlder(Protocols.SMSG_OPERATION_FAILED, this, this.onOptHandler);
+                this._game.qifuMgr.off(QiFuMgr.QIFU_FLY, this, this.qifuFly);
 
                 for (let i: number = 0; i < this._areaList.length; i++) {
                     this._areaList[i] && this._areaList[i].off(LEvent.CLICK, this, this.onAreaBetClick);
