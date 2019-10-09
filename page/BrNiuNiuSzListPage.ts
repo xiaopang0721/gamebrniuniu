@@ -120,23 +120,12 @@ module gamebrniuniu.page {
 		private _game: Game;
 		private _unit: Unit;
 		private _clipMoney: BrniuniuClip;
-		private _unitHeadImg: string;
-		private _nameStrInfo: string[] = ["xs", "px", "gsy", "gg", "cs", "tdg"];
 		setData(game: Game, data: any) {
 			this._game = game;
 			this._unit = this._game.sceneObjectMgr.getUnitByIdx(data[0]);
-			this._unitHeadImg = this._unit.GetHeadImg();
-			this.img_txk.visible = this._unit.GetVipLevel() > 0;
-			if (this.img_txk.visible) {
-				this.img_txk.skin = PathGameTongyong.ui_tongyong_touxiang + "tu_v" + this._unit.GetVipLevel() + ".png";
-			}
+			this.img_txk.skin = this._game.datingGame.getTouXiangKuangUrl(this._unit.GetHeadKuangImg(), 2);
 			this.txt_name.text = this._unit.GetName();
-			if (this._unitHeadImg) {
-				this.img_head.skin = PathGameTongyong.ui_tongyong_touxiang + "head_" + this._unitHeadImg + ".png";
-				if (this._unit.GetQiFuType() && this._unit.GetQFEndTime(this._unit.GetQiFuType() - 1) > this._game.sync.serverTimeBys) {
-					this.img_head.skin = PathGameTongyong.ui_tongyong_touxiang + "head_" + this._nameStrInfo[this._unit.GetQiFuType() - 1] + ".png";
-				}
-			}
+			this.img_head.skin = this._game.datingGame.getHeadUrl(this._unit.GetHeadImg(), 2);
 			if (!this._clipMoney) {
 				this._clipMoney = new BrniuniuClip(BrniuniuClip.MONEY_FONT2)
 				this._clipMoney.x = this.clip_money.x;
