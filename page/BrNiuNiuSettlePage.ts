@@ -28,11 +28,11 @@ module gamebrniuniu.page {
 			super.onOpen();
 			let mainPlayer = this._game.sceneObjectMgr.mainPlayer;
 			//主玩家
-			this._viewUI.img_head0.skin = this._game.datingGame.getHeadUrl(mainPlayer.playerInfo.headimg, 2);
+			this._viewUI.img_head0.skin = TongyongUtil.getHeadUrl(mainPlayer.playerInfo.headimg, 2);
 			this._viewUI.txt_name0.text = mainPlayer.playerInfo.nickname;
 			this._viewUI.txt_bet0.text = this.dataSource.myBet.toString();
 			this._viewUI.txt_benefit0.text = this.dataSource.myBenefit.toString();
-			this._viewUI.img_txk0.skin = this._game.datingGame.getTouXiangKuangUrl(mainPlayer.playerInfo.headKuang, 2)
+			this._viewUI.img_txk0.skin = TongyongUtil.getTouXiangKuangUrl(mainPlayer.playerInfo.headKuang, 2)
 			//庄家
 			this._viewUI.img_head1.skin = this.dataSource.bankerHead;
 			this._viewUI.img_txk1.skin = this.dataSource.bankerTxk;
