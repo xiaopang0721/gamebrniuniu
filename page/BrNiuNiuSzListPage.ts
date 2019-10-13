@@ -123,7 +123,7 @@ module gamebrniuniu.page {
 		setData(game: Game, data: any) {
 			this._game = game;
 			this._unit = this._game.sceneObjectMgr.getUnitByIdx(data[0]);
-			this.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(this._unit.GetHeadKuangImg(), 2);
+			this.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(this._unit.GetHeadKuangImg());
 			this.txt_name.text = this._unit.GetName();
 			this.img_head.skin = TongyongUtil.getHeadUrl(this._unit.GetHeadImg(), 2);
 			if (!this._clipMoney) {

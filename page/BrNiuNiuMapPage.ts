@@ -88,6 +88,7 @@ module gamebrniuniu.page {
         private _bankerName: string;
         private _bankerHead: string;
         private _bankerTXK: string;
+        private _bankerVip: string;
         private _betAllTotal: number = 0;
         private _betMainTotal: number = 0;
         private _isReConnect: boolean = true;
@@ -275,7 +276,9 @@ module gamebrniuniu.page {
             this._viewUI.main_player.txt_money.text = money.toString();
             this._viewUI.main_player.img_qifu.visible = TongyongUtil.getIsHaveQiFu(mainPlayer, this._game.sync.serverTimeBys);
             this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainPlayer.playerInfo.headimg, 2);
-            this._viewUI.main_player.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(mainPlayer.playerInfo.headKuang, 2);
+            this._viewUI.main_player.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(mainPlayer.playerInfo.headKuang);
+            this._viewUI.main_player.img_vip.visible = mainPlayer.playerInfo.vip_level > 0;
+            this._viewUI.main_player.img_vip.skin = TongyongUtil.getVipUrl(mainPlayer.playerInfo.vip_level);
         }
 
         private onUpdateUnit(qifu_index?: number) {
@@ -292,7 +295,11 @@ module gamebrniuniu.page {
                 }
                 this.onUpdateChipGrey();
                 let mainIdx = mainUnit.GetIndex();
-                this._viewUI.main_player.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(mainUnit.GetHeadKuangImg(), 2);
+                //头像框
+                this._viewUI.main_player.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(mainUnit.GetHeadKuangImg());
+                //vip标识
+                this._viewUI.main_player.img_vip.visible = mainUnit.GetVipLevel() > 0;
+                this._viewUI.main_player.img_vip.skin = TongyongUtil.getVipUrl(mainUnit.GetVipLevel());
                 //祈福成功 头像上就有动画
                 if (qifu_index && mainIdx == qifu_index) {
                     this._viewUI.main_player.qifu_type.visible = true;
@@ -1173,7 +1180,9 @@ module gamebrniuniu.page {
                     seat.txt_money.text = EnumToString.getPointBackNum(unit.GetMoney(), 2).toString();
                     seat.txt_name.fontSize = 15;
                     seat.img_icon.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
-                    seat.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(unit.GetHeadKuangImg(), 2);
+                    seat.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(unit.GetHeadKuangImg());
+                    seat.img_vip.visible = unit.GetVipLevel() > 0;
+                    seat.img_vip.skin = TongyongUtil.getVipUrl(unit.GetVipLevel());
                     //祈福成功 头像上就有动画
                     if (qifu_index && unitIndex == qifu_index) {
                         seat.qifu_type.visible = true;
@@ -1202,6 +1211,7 @@ module gamebrniuniu.page {
                     seat.img_qifu.visible = false;
                     seat.qifu_type.visible = false;
                     seat.img_txk.visible = false;
+                    seat.img_vip.visible = false;
                 }
             }
         }
@@ -1356,8 +1366,11 @@ module gamebrniuniu.page {
             if (bankerUnit) {
                 this._bankerName = bankerUnit.GetName();
                 this._bankerHead = TongyongUtil.getHeadUrl(bankerUnit.GetHeadImg(), 2);
-                this._bankerTXK = TongyongUtil.getTouXiangKuangUrl(bankerUnit.GetHeadKuangImg(), 2);
+                this._bankerTXK = TongyongUtil.getTouXiangKuangUrl(bankerUnit.GetHeadKuangImg());
+                this._bankerVip = TongyongUtil.getVipUrl(bankerUnit.GetVipLevel());
                 this._viewUI.img_txk_zhuang.skin = this._bankerTXK;
+                this._viewUI.img_vip_zhuang.skin = this._bankerVip;
+                this._viewUI.img_vip_zhuang.visible = bankerUnit.GetVipLevel() > 0;
                 this._viewUI.icon_banker.skin = this._bankerHead;
                 this._viewUI.txt_zhuangjia.text = this._bankerName;
                 this._viewUI.txt_lianzhuang.text = bankerUnit.GetLzNum().toString();
