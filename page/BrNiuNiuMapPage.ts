@@ -972,7 +972,7 @@ module gamebrniuniu.page {
             let betBefore = this._betMain0 + this._betMain1 + this._betMain2 + this._betMain3;
             limitMoney = (money + betBefore) / 4;
             if (total + betBefore > limitMoney) {
-                this._game.uiRoot.topUnder.showTips("老板，下注金额不能超过携带金币的六分之一哦~");
+                this._game.uiRoot.topUnder.showTips("老板，下注金额不能超过携带金币的四分之一哦~");
                 return;
             }
             for (let i = 0; i < this._rebetList.length; i++) {
@@ -1032,9 +1032,9 @@ module gamebrniuniu.page {
             }
             let money = this._game.sceneObjectMgr.mainUnit.GetMoney();
             let betBefore = this._betMain0 + this._betMain1 + this._betMain2 + this._betMain3;
-            limitMoney = (money + betBefore) / 6;
+            limitMoney = (money + betBefore) / 4;
             if (this._curChip + betBefore > limitMoney) {
-                this._game.uiRoot.topUnder.showTips("老板，下注金额不能超过携带金币的六分之一哦~");
+                this._game.uiRoot.topUnder.showTips("老板，下注金额不能超过携带金币的四分之一哦~");
                 return;
             }
             if (money + betBefore < PLAYER_LEAST_MONEY) {
