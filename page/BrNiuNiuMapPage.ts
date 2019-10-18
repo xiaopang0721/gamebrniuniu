@@ -313,10 +313,11 @@ module gamebrniuniu.page {
                             this._viewUI.main_player.img_qifu.visible = true;
                             this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
                         })
-                    } else {
-                        this._viewUI.main_player.img_qifu.visible = true;
-                        this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
-                    }
+                    } 
+                    // else {
+                    //     this._viewUI.main_player.img_qifu.visible = true;
+                    //     this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
+                    // }
                 } else {
                     this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
                     this._viewUI.main_player.img_qifu.visible = false;
