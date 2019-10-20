@@ -150,9 +150,9 @@ module gamebrniuniu.page {
             this._viewUI.btn_set.on(LEvent.CLICK, this, this.onBtnClickWithTween);
             this._viewUI.btn_zhanji.on(LEvent.CLICK, this, this.onBtnClickWithTween);
             this._viewUI.btn_repeat.on(LEvent.CLICK, this, this.onBtnClickWithTween);
-            this._viewUI.btn_playerList.on(LEvent.CLICK, this, this.onBtnClickWithTween);
             this._viewUI.btn_shangzhuang.on(LEvent.CLICK, this, this.onBtnClickWithTween);
             this._viewUI.btn_qifu.on(LEvent.CLICK, this, this.onBtnClickWithTween);
+            this._viewUI.btn_playerList.on(LEvent.CLICK, this, this.onClickHandle);
 
 
             this._game.sceneObjectMgr.on(SceneObjectMgr.EVENT_ADD_UNIT, this, this.onUnitAdd);
@@ -316,10 +316,11 @@ module gamebrniuniu.page {
                             this._viewUI.main_player.img_qifu.visible = true;
                             this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
                         })
-                    } else {
-                        this._viewUI.main_player.img_qifu.visible = true;
-                        this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
-                    }
+                    } 
+                    // else {
+                    //     this._viewUI.main_player.img_qifu.visible = true;
+                    //     this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
+                    // }
                 } else {
                     this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
                     this._viewUI.main_player.img_qifu.visible = false;
@@ -886,14 +887,17 @@ module gamebrniuniu.page {
             this._pageHandle.reset();//清空额外界面存储数组
         }
 
+        //点击事件
+        protected onClickHandle(e: LEvent): void {
+            //玩家列表
+            this._game.uiRoot.general.open(BrniuniuPageDef.PAGE_BRNIUNIU_PLAYER_LIST);
+        }
+
         //按钮缓动回调
         protected onBtnTweenEnd(e: any, target: any): void {
             switch (target) {
                 case this._viewUI.btn_spread:
                     this.showMenu(true);
-                    break;
-                case this._viewUI.btn_playerList://玩家列表
-                    this._game.uiRoot.general.open(BrniuniuPageDef.PAGE_BRNIUNIU_PLAYER_LIST);
                     break;
                 case this._viewUI.btn_qifu://祈福
                     this._game.uiRoot.general.open(DatingPageDef.PAGE_QIFU);
@@ -1481,9 +1485,9 @@ module gamebrniuniu.page {
                 this._viewUI.btn_set.off(LEvent.CLICK, this, this.onBtnClickWithTween);
                 this._viewUI.btn_zhanji.off(LEvent.CLICK, this, this.onBtnClickWithTween);
                 this._viewUI.btn_repeat.off(LEvent.CLICK, this, this.onBtnClickWithTween);
-                this._viewUI.btn_playerList.off(LEvent.CLICK, this, this.onBtnClickWithTween);
                 this._viewUI.btn_shangzhuang.off(LEvent.CLICK, this, this.onBtnClickWithTween);
                 this._viewUI.btn_qifu.off(LEvent.CLICK, this, this.onBtnClickWithTween);
+                this._viewUI.btn_playerList.off(LEvent.CLICK, this, this.onClickHandle);
 
 
                 this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_ADD_UNIT, this, this.onUnitAdd);
