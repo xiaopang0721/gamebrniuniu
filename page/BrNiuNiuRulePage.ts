@@ -27,10 +27,6 @@ module gamebrniuniu.page {
 			this._viewUI = this.createView('game_ui.brniuniu.BaiRenNN_GuiZeUI');
 			this.addChild(this._viewUI);
 
-			this._viewUI.panel_beishu.vScrollBarSkin = "";
-			this._viewUI.panel_beishu.vScrollBar.autoHide = true;
-			this._viewUI.panel_beishu.vScrollBar.elasticDistance = 100;
-			
 			this._viewUI.panel_leixing.vScrollBarSkin = "";
 			this._viewUI.panel_leixing.vScrollBar.autoHide = true;
 			this._viewUI.panel_leixing.vScrollBar.elasticDistance = 100;
@@ -48,9 +44,9 @@ module gamebrniuniu.page {
 		}
 
 		private selectHandler(index: number): void {
-			this._viewUI.txt_wanfa.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_WANFA_JIESHAO;
+			this._viewUI.img_wanfa.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_WANFA_JIESHAO;
 			this._viewUI.panel_leixing.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_LEIXING;
-			this._viewUI.panel_beishu.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_BEISHU;
+			this._viewUI.img_beishu.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_BEISHU;
 		}
 
 		public close(): void {
