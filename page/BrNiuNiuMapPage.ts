@@ -515,6 +515,7 @@ module gamebrniuniu.page {
         private createChip(startIdx: number, targetIdx: number, type: number, value: number, index: number, unitIndex: number) {
             let chip = this._game.sceneObjectMgr.createOfflineObject(SceneRoot.CHIP_MARK, BrNiuNiuChip) as BrNiuNiuChip;
             chip.setData(startIdx, targetIdx, type, value, index, unitIndex);
+            chip.visible = false;
             if (targetIdx == 1) {
                 this._chipTian.push(chip);
             } else if (targetIdx == 2) {
@@ -529,6 +530,7 @@ module gamebrniuniu.page {
             }
             else {
                 Laya.timer.once(350, this, () => {
+                    chip.visible = true;
                     chip.sendChip();
                     this._game.playSound(Path_game_brniuniu.music_brniuniu + "chouma.mp3", false);
                 })
