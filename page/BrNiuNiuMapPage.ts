@@ -526,6 +526,7 @@ module gamebrniuniu.page {
                 this._chipHuang.push(chip);
             }
             if (this._isReDrawChips && this._curStatus != MAP_STATUS.PLAY_STATUS_BET) {
+                chip.visible = true;
                 chip.drawChip();
             }
             else {
