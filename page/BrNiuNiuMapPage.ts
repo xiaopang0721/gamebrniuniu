@@ -1188,10 +1188,11 @@ module gamebrniuniu.page {
                                 seat.img_qifu.visible = true;
                                 seat.img_icon.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
                             })
-                        } else {
-                            seat.img_qifu.visible = true;
-                            seat.img_icon.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
-                        }
+                        } 
+                        // else {
+                        //     seat.img_qifu.visible = true;
+                        //     seat.img_icon.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
+                        // }
                     } else {
                         seat.img_qifu.visible = false;
                     }
