@@ -313,7 +313,7 @@ module gamebrniuniu.page {
                             this._viewUI.main_player.img_qifu.visible = true;
                             this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
                         })
-                    } 
+                    }
                     // else {
                     //     this._viewUI.main_player.img_qifu.visible = true;
                     //     this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
@@ -598,6 +598,9 @@ module gamebrniuniu.page {
                     this._aniKaiPaiList[playerIndex].ani_kaipai.play(0, false);
                     this._niuMgr.yincang(playerIndex);
                 })
+                Laya.timer.once(1700 + count * 1800, this, () => {
+                    this._game.playSound(Path_game_brniuniu.music_brniuniu + "" + StringU.substitute("niu{0}_nv.mp3", cardType));
+                })
             }
             let url = Path_game_brniuniu.ui_brniuniu + "brnntype_normal_{0}.png";
             let url_bg = Path_game_brniuniu.ui_brniuniu + "brnntype_bgimg_{0}.png";
@@ -606,9 +609,6 @@ module gamebrniuniu.page {
             this._cardsTypeList[playerIndex].img_type.skin = StringU.substitute(url, cardType);
             this._cardsTypeList[playerIndex].img_type.disabled = cardType == 0;
             this._cardsTypeList[playerIndex].img_bg.skin = StringU.substitute(url_bg, bgType);
-            Laya.timer.once(1700 + count * 1800, this, () => {
-                this._game.playSound(Path_game_brniuniu.music_brniuniu + "" + StringU.substitute("niu{0}_nv.mp3", cardType));
-            })
         }
 
         //结算飘筹码
@@ -1189,7 +1189,7 @@ module gamebrniuniu.page {
                                 seat.img_qifu.visible = true;
                                 seat.img_icon.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
                             })
-                        } 
+                        }
                         // else {
                         //     seat.img_qifu.visible = true;
                         //     seat.img_icon.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
