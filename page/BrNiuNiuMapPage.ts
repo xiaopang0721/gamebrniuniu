@@ -174,6 +174,7 @@ module gamebrniuniu.page {
             this.onUpdateRecord();
             this.onUpdateUnitOffline();
             this.onUpdateSeatedList();
+            this.onUpdateCountDown();
         }
 
         private _curDiffTime: number;
