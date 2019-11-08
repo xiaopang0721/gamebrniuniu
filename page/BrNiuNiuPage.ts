@@ -34,7 +34,7 @@ module gamebrniuniu.page {
 			}
 
 			this._viewUI.list_room.hScrollBarSkin = "";
-			this._viewUI.list_room.itemRender = this.createChildren("game_ui.brniuniu.component.HUDRenderUI", BrniuniuHUDRender);
+			this._viewUI.list_room.itemRender = this.createChildren("game_ui.brniuniu.component.ChangCiRenderUI", BrniuniuHUDRender);
 			this._viewUI.list_room.renderHandler = new Handler(this, this.renderHandler);
 			this._viewUI.list_room.scrollBar.elasticDistance = 100;
 		}

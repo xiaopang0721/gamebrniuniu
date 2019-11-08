@@ -123,17 +123,7 @@ module gamebrniuniu.data {
 		}
 
 		moveCard() {
-			super.fapai();
-		}
-
-		goUp() {
-			this.targe_pos.y = this.targe_pos.y + 20;
-			super.fapai();
-		}
-
-		goDown() {
-			this.targe_pos.y = this.targe_pos.y - 20;
-			super.fapai();
+			super.movePai();
 		}
 	}
 }

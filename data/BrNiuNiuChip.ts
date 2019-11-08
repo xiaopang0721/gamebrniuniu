@@ -8,7 +8,7 @@ module gamebrniuniu.data {
 		}
 		//筹码起始位置(主玩家，其他玩家，庄家，座位0，座位1，座位2，座位3，座位4，座位5)  
 		private _chipStart = [[200, 610], [70, 657], [335, 45],
-		[85, 200], [85, 325], [85, 500], [1225, 180], [1225, 345], [1225, 500]];
+		[85, 200], [85, 340], [85, 500], [1225, 180], [1225, 355], [1225, 500]];
 		private _chipEnd = [[275, 295], [515, 295], [765, 295], [1015, 295]];  //筹码终点位置
 		private _startIndex: number;
 		private _targetIndex: number;
@@ -46,6 +46,7 @@ module gamebrniuniu.data {
 			this.targe_pos.x = target[index][0];
 			this.targe_pos.y = target[index][1];
 			if (!this.pos) return;
+			super.comebackChip();
 			Laya.Tween.clearAll(this);
 			Laya.Tween.to(this.pos, { x: this.targe_pos.x, y: this.targe_pos.y }, 500 + count * 15, Laya.Ease.backIn, Handler.create(this, () => {
 				this.isFinalPos = true;
