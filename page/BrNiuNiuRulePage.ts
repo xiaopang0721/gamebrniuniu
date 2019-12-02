@@ -27,14 +27,18 @@ module gamebrniuniu.page {
 			this._viewUI = this.createView('game_ui.brniuniu.BaiRenNN_GuiZeUI');
 			this.addChild(this._viewUI);
 
-			this._viewUI.panel_leixing.vScrollBarSkin = "";
-			this._viewUI.panel_leixing.vScrollBar.autoHide = true;
-			this._viewUI.panel_leixing.vScrollBar.elasticDistance = 100;
+			this._viewUI.txt_leixing.vScrollBarSkin = "";
+			this._viewUI.txt_leixing.vScrollBar.autoHide = true;
+			this._viewUI.txt_leixing.vScrollBar.elasticDistance = 100;
 		}
 
 		// 页面打开时执行函数
 		protected onOpen(): void {
 			super.onOpen();
+			this._viewUI.txt_beishu.vScrollBarSkin = "";
+			this._viewUI.txt_beishu.vScrollBar.autoHide = true;
+			this._viewUI.txt_beishu.vScrollBar.elasticDistance = 100;
+
 			this._viewUI.btn_tab.selectHandler = Handler.create(this, this.selectHandler, null, false);
 			if (this.dataSource) {
 				this._viewUI.btn_tab.selectedIndex = this.dataSource;
@@ -44,9 +48,9 @@ module gamebrniuniu.page {
 		}
 
 		private selectHandler(index: number): void {
-			this._viewUI.img_wanfa.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_WANFA_JIESHAO;
-			this._viewUI.panel_leixing.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_LEIXING;
-			this._viewUI.img_beishu.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_BEISHU;
+			this._viewUI.txt_wanfa.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_WANFA_JIESHAO;
+			this._viewUI.txt_leixing.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_LEIXING;
+			this._viewUI.txt_beishu.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_BEISHU;
 		}
 
 		public close(): void {
