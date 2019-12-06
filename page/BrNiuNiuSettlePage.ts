@@ -3,7 +3,7 @@
 */
 module gamebrniuniu.page {
 	export class BrNiuNiuSettlePage extends game.gui.base.Page {
-		private _viewUI: ui.nqp.game_ui.brniuniu.JieSuanUI;
+		private _viewUI: ui.ajqp.game_ui.brniuniu.JieSuanUI;
 		private _imgList: Array<LImage> = [];
 
 		constructor(v: Game, onOpenFunc?: Function, onCloseFunc?: Function) {

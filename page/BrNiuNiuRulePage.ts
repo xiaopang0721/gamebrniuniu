@@ -8,7 +8,7 @@ module gamebrniuniu.page {
 		TYPE_CARD_BEISHU = 2,
 	}
 	export class BrNiuNiuRulePage extends game.gui.base.Page {
-		private _viewUI: ui.nqp.game_ui.brniuniu.BaiRenNN_GuiZeUI;
+		private _viewUI: ui.ajqp.game_ui.brniuniu.BaiRenNN_GuiZeUI;
 
 		constructor(v: Game, onOpenFunc?: Function, onCloseFunc?: Function) {
 			super(v, onOpenFunc, onCloseFunc);
@@ -27,17 +27,17 @@ module gamebrniuniu.page {
 			this._viewUI = this.createView('game_ui.brniuniu.BaiRenNN_GuiZeUI');
 			this.addChild(this._viewUI);
 
-			this._viewUI.txt_leixing.vScrollBarSkin = "";
-			this._viewUI.txt_leixing.vScrollBar.autoHide = true;
-			this._viewUI.txt_leixing.vScrollBar.elasticDistance = 100;
+			this._viewUI.panel_leixing.vScrollBarSkin = "";
+			this._viewUI.panel_leixing.vScrollBar.autoHide = true;
+			this._viewUI.panel_leixing.vScrollBar.elasticDistance = 100;
 		}
 
 		// 页面打开时执行函数
 		protected onOpen(): void {
 			super.onOpen();
-			this._viewUI.txt_beishu.vScrollBarSkin = "";
-			this._viewUI.txt_beishu.vScrollBar.autoHide = true;
-			this._viewUI.txt_beishu.vScrollBar.elasticDistance = 100;
+			this._viewUI.panel_beishu.vScrollBarSkin = "";
+			this._viewUI.panel_beishu.vScrollBar.autoHide = true;
+			this._viewUI.panel_beishu.vScrollBar.elasticDistance = 100;
 
 			this._viewUI.btn_tab.selectHandler = Handler.create(this, this.selectHandler, null, false);
 			if (this.dataSource) {
@@ -48,9 +48,9 @@ module gamebrniuniu.page {
 		}
 
 		private selectHandler(index: number): void {
-			this._viewUI.txt_wanfa.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_WANFA_JIESHAO;
-			this._viewUI.txt_leixing.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_LEIXING;
-			this._viewUI.txt_beishu.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_BEISHU;
+			this._viewUI.img_wanfa.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_WANFA_JIESHAO;
+			this._viewUI.panel_leixing.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_LEIXING;
+			this._viewUI.panel_beishu.visible = this._viewUI.btn_tab.selectedIndex == TYPE_INDEX.TYPE_CARD_BEISHU;
 		}
 
 		public close(): void {

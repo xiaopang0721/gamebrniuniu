@@ -38,7 +38,7 @@ module gamebrniuniu.page {
         };
 
 
-        private _viewUI: ui.nqp.game_ui.brniuniu.BaiRenNNUI;
+        private _viewUI: ui.ajqp.game_ui.brniuniu.BaiRenNNUI;
         private _niuMgr: BrNiuNiuMgr;
         private _niuStory: BrniuniuStory;
         private _niuMapInfo: BrniuniuMapInfo;
@@ -143,7 +143,7 @@ module gamebrniuniu.page {
             this._viewUI.btn_chongzhi.visible = !WebConfig.enterGameLocked;
             
             this._viewUI.btn_spread.on(LEvent.CLICK, this, this.onBtnClickWithTween);
-            this._viewUI.btn_cardType.on(LEvent.CLICK, this, this.onBtnClickWithTween);
+            // this._viewUI.btn_cardType.on(LEvent.CLICK, this, this.onBtnClickWithTween);
             this._viewUI.btn_back.on(LEvent.CLICK, this, this.onBtnClickWithTween);
             this._viewUI.btn_rule.on(LEvent.CLICK, this, this.onBtnClickWithTween);
             this._viewUI.btn_chongzhi.on(LEvent.CLICK, this, this.onBtnClickWithTween);
@@ -911,11 +911,11 @@ module gamebrniuniu.page {
                         page.dataSource = this._szlimit;
                     });
                     break;
-                case this._viewUI.btn_cardType:
-                    this._game.uiRoot.general.open(BrniuniuPageDef.PAGE_BRNIUNIU_RULE, (page: BrNiuNiuRulePage) => {
-                        page.dataSource = 1;
-                    });
-                    break;
+                // case this._viewUI.btn_cardType:
+                //     this._game.uiRoot.general.open(BrniuniuPageDef.PAGE_BRNIUNIU_RULE, (page: BrNiuNiuRulePage) => {
+                //         page.dataSource = 1;
+                //     });
+                //     break;
                 case this._viewUI.btn_rule:
                     this._game.uiRoot.general.open(BrniuniuPageDef.PAGE_BRNIUNIU_RULE);
                     break;
@@ -1469,7 +1469,7 @@ module gamebrniuniu.page {
         public close(): void {
             if (this._viewUI) {
                 this._viewUI.btn_spread.off(LEvent.CLICK, this, this.onBtnClickWithTween);
-                this._viewUI.btn_cardType.off(LEvent.CLICK, this, this.onBtnClickWithTween);
+                // this._viewUI.btn_cardType.off(LEvent.CLICK, this, this.onBtnClickWithTween);
                 this._viewUI.btn_back.off(LEvent.CLICK, this, this.onBtnClickWithTween);
                 this._viewUI.btn_rule.off(LEvent.CLICK, this, this.onBtnClickWithTween);
                 this._viewUI.btn_chongzhi.off(LEvent.CLICK, this, this.onBtnClickWithTween);
@@ -1540,7 +1540,7 @@ module gamebrniuniu.page {
             super.close();
         }
     }
-    class RoadRecordRender extends ui.nqp.game_ui.brniuniu.component.RoadRenderUI {
+    class RoadRecordRender extends ui.ajqp.game_ui.brniuniu.component.RoadRenderUI {
         private _game: Game;
         private _data: any;
         private _typeList = ["无", "1", "2", "3", "4", "5", "6", "7", "8", "9", "牛", "牛", "牛", "牛", "牛"];

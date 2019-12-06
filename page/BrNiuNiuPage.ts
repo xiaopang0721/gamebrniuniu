@@ -3,10 +3,9 @@
 */
 module gamebrniuniu.page {
 	export class BrNiuNiuPage extends game.gui.base.Page {
-		static readonly BET_TIME: number = 15;   //下注时长
 		static readonly BET_MAX: number[] = [200, 500, 1000, 2000];   //投注限额
 
-		private _viewUI: ui.nqp.game_ui.brniuniu.BaiRenNN_HUDUI;
+		private _viewUI: ui.ajqp.game_ui.brniuniu.BaiRenNN_HUDUI;
 		private _player: any;
 		private _playerInfo: any;
 		private _niuHudMgr: BrNiuNiuHudMgr;
@@ -20,6 +19,7 @@ module gamebrniuniu.page {
 				PathGameTongyong.atlas_game_ui_tongyong + "hud.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "dating.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "logo.atlas",
+				PathGameTongyong.atlas_game_ui_tongyong_general + "anniu.atlas",
 			];
 			this._isNeedDuang = false;
 		}
@@ -33,17 +33,14 @@ module gamebrniuniu.page {
 				this._niuHudMgr.on(BrNiuNiuHudMgr.EVENT_RETURN_MAPINFO, this, this.onUpdateMapinfo);
 			}
 
-			this._viewUI.list_room.hScrollBarSkin = "";
 			this._viewUI.list_room.itemRender = this.createChildren("game_ui.brniuniu.component.ChangCiRenderUI", BrniuniuHUDRender);
 			this._viewUI.list_room.renderHandler = new Handler(this, this.renderHandler);
-			this._viewUI.list_room.scrollBar.elasticDistance = 100;
 		}
 
 		// 页面打开时执行函数
 		protected onOpen(): void {
 			super.onOpen();
-			this._viewUI.btn_join.on(LEvent.CLICK, this, this.onBtnClickWithTween);
-			(this._viewUI.view as TongyongHudNqpPage).onOpen(this._game, BrniuniuPageDef.GAME_NAME);
+			(this._viewUI.view as TongyongHudPage).onOpen(this._game, BrniuniuPageDef.GAME_NAME);
 			this._game.playMusic(Path_game_brniuniu.music_brniuniu + "nn_bgm.mp3");
 
 			let datas = [];
@@ -61,7 +58,6 @@ module gamebrniuniu.page {
 			this._player = null;
 			if (this._viewUI) {
 				this._viewUI.list_room.dataSource = [];
-				this._viewUI.btn_join.off(LEvent.CLICK, this, this.onBtnClickWithTween);
 				if (this._niuHudMgr) {
 					this._niuHudMgr.off(BrNiuNiuHudMgr.EVENT_RETURN_MAPINFO, this, this.onUpdateMapinfo);
 					this._niuHudMgr.clear();
@@ -73,19 +69,9 @@ module gamebrniuniu.page {
 			super.close();
 		}
 
-		public resize(w: number, h: number, realW: number, realH: number, isLayout: boolean = true): void {
-			super.resize(w, h, realW, realH);
-			if (this._viewUI) {
-				this._viewUI.list_room.width = this._clientWidth;
-			}
-		}
-
 		private renderHandler(cell: BrniuniuHUDRender, index: number) {
-			if (!cell) return;
-			cell.setData(this, this._game, cell.dataSource);
-			if (!cell.isTween) {
-				Laya.Tween.from(cell, { x: cell.x + 600 }, 200 + index * 100);
-				cell.isTween = true;
+			if (cell) {
+				cell.setData(this._game, cell.dataSource);
 			}
 		}
 
@@ -116,60 +102,30 @@ module gamebrniuniu.page {
 					let curTime = this._game.sync.serverTimeBys;
 					let endTime = data[i][1];
 					let time = Math.floor(endTime - curTime);
-					let valueBar: number;
 					if (data[i][0] == 3) {//下注中
 						if (time <= 0) {
-							valueBar = 0;
 							cell.state = "结算中...";
-							cell.barV = valueBar;
 						} else {
-							valueBar = time / BrNiuNiuPage.BET_TIME;
 							cell.state = "下注中..." + time + "s";
-							if (cell.tag != 1 && valueBar) {
-								cell.tag = 1;
-								cell.barV = valueBar;
-								Laya.Tween.to(cell.bar, { value: 0 }, time * 1000, null, Handler.create(this, () => {
-									cell.tag = 0;
-								}));
-							}
 						}
 					} else {
-						valueBar = 0;
 						cell.state = "结算中...";
-						cell.barV = valueBar;
 					}
 				}
 			});
 		}
-
-
-		protected onBtnTweenEnd(e: any, target: any): void {
-			this._player = this._game.sceneObjectMgr.mainPlayer;
-			if (!this._player) return;
-			this._playerInfo = this._player.playerInfo;
-			switch (target) {
-				// case this._viewUI.btn_join:
-				// 	let maplv = TongyongUtil.getJoinMapLv(BrniuniuPageDef.GAME_NAME, this._playerInfo.money);
-				// 	if (!maplv) return;
-				// 	this._game.sceneObjectMgr.intoStory(BrniuniuPageDef.GAME_NAME, maplv.toString(), true);
-				// 	break;
-				default:
-					break;
-			}
-		}
 	}
 
-	class BrniuniuHUDRender extends ui.nqp.game_ui.brniuniu.component.ChangCiRenderUI {
+	class BrniuniuHUDRender extends ui.ajqp.game_ui.brniuniu.component.ChangCiRenderUI {
 		public index: number;
 		public isTween: boolean;
-		private _page: BrNiuNiuPage;
 		private _game: Game;
 		private _data: any;
 		private _max: number = -1;
 		constructor() {
 			super();
 		}
-		setData(page: BrNiuNiuPage, game: Game, data: any) {
+		setData(game: Game, data: any) {
 			if (!data) {
 				this.visible = false;
 				return;
@@ -177,7 +133,6 @@ module gamebrniuniu.page {
 			if (this._max == data[0]) {
 				return;
 			}
-			this._page = page;
 			this._game = game;
 			this._max = data[0];
 			this.index = data[1];
@@ -202,10 +157,6 @@ module gamebrniuniu.page {
 			this.txt_status.text = v.toString();
 		}
 
-		set barV(v) {
-			this.bar.value = v;
-		}
-
 		private renderHandler(cell: HudRecordRender, index: number) {
 			if (cell) {
 				cell.setData(this._game, cell.dataSource);
@@ -214,9 +165,9 @@ module gamebrniuniu.page {
 
 		private show() {
 			this.txt_max.text = '投注限额：' + this._max;
-			this.btn_enter.skin = PathGameTongyong.ui_tongyong + 'hud/btn_hud_' + this.index + '.png';
 			this.img_bg.skin = PathGameTongyong.ui_tongyong + 'hud/difen_2_' + this.index + '.png';
-			this.img_tdxh.skin = Path_game_brniuniu.ui_brniuniu + 'tu_tdxh' + this.index + '.png';
+			// this.btn_enter.skin = PathGameTongyong.ui_tongyong + 'hud/btn_hud_' + this.index + '.png';
+			// this.img_tdxh.skin = Path_game_brniuniu.ui_brniuniu + 'tu_tdxh' + this.index + '.png';
 		}
 
 		private onClick() {
@@ -224,7 +175,7 @@ module gamebrniuniu.page {
 		}
 	}
 
-	class HudRecordRender extends ui.nqp.game_ui.brniuniu.component.HudRenderUI {
+	class HudRecordRender extends ui.ajqp.game_ui.brniuniu.component.HudRenderUI {
 		private _game: Game;
 		private _data: any;
 		constructor() {
