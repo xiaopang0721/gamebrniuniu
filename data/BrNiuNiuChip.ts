@@ -22,7 +22,7 @@ module gamebrniuniu.data {
 			this._type = type;
 			this._startIndex = startIdx;
 			this._targetIndex = targetIdx - 1;
-			this.rotateAngle = MathU.randomRange(0, 360);
+			// this.rotateAngle = MathU.randomRange(0, 360);
 			this._seatIndex = unitIndex;
 		}
 
@@ -46,12 +46,7 @@ module gamebrniuniu.data {
 			this.targe_pos.x = target[index][0];
 			this.targe_pos.y = target[index][1];
 			if (!this.pos) return;
-			super.comebackChip();
-			Laya.Tween.clearAll(this);
-			Laya.Tween.to(this.pos, { x: this.targe_pos.x, y: this.targe_pos.y }, 500 + count * 15, Laya.Ease.backIn, Handler.create(this, () => {
-				this.isFinalPos = true;
-				game.sceneObjectMgr.clearOfflineObject(this);
-			}));
+			super.flyChipBase(500 + count * 15,game);
 		}
 
 		drawChip() {
