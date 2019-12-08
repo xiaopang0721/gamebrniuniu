@@ -90,8 +90,8 @@ module gamebrniuniu.page {
 			this.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(this._unit.GetHeadKuangImg());
 			if (!this._clipNum) {
 				this._clipNum = new BrniuniuClip(BrniuniuClip.RANK_FONT2)
-				this._clipNum.x = this.clip_num.x;
-				this._clipNum.y = this.clip_num.y;
+				this._clipNum.centerX = this.clip_num.centerX;
+				this._clipNum.centerY = this.clip_num.centerY;
 				this.clip_num.parent.addChild(this._clipNum);
 				this.clip_num.visible = false;
 			}

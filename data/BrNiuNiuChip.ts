@@ -15,7 +15,7 @@ module gamebrniuniu.data {
 		public _seatIndex: number;//精灵座位归属
 		//初始位置，终点位置，筹码类型，筹码大小，筹码层级
 		setData(startIdx: number, targetIdx: number, type: number, value: number, index: number, unitIndex: number) {
-			this.size = 0.4;
+			this.size = 0.44;
 			this.sortScore = 999 - index;
 			this.pos = new Vector2(this._chipStart[startIdx][0], this._chipStart[startIdx][1]);
 			this._val = value.toString();

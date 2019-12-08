@@ -14,7 +14,7 @@ module gamebrniuniu {
 
         static init(): void {
             this.MONEY_FONT2 = {
-                source: PathGameTongyong.atlas_game_ui_tongyong+ "general.atlas",
+                source: PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
                 url: PathGameTongyong.ui_tongyong_general + 'clip_money1.png',
                 clipWidth: 16,
                 clipHeight: 22,
@@ -22,19 +22,19 @@ module gamebrniuniu {
                 space: 0
             };
             this.RANK_FONT2 = {
-                source: PathGameTongyong.atlas_game_ui_tongyong+ "general.atlas",
+                source: PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
                 url: PathGameTongyong.ui_tongyong_general + 'clip_top.png',
-                clipWidth: 28,
-                clipHeight: 31,
-                clipX: 10,
-                space: 0
+                clipWidth: 40,
+                clipHeight: 50,
+                clipX: 11,
+                space: -10
             };
 
             //加钱飘字
             this.ADD_MONEY_FONT = {
-                source: PathGameTongyong.atlas_game_ui_tongyong+ "general.atlas",
+                source: PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
                 url: PathGameTongyong.ui_tongyong_general + 'clip_num1.png',
-                clipWidth: 25,
+                clipWidth: 28,
                 clipHeight: 32,
                 clipX: 11,
                 space: -8
@@ -42,9 +42,9 @@ module gamebrniuniu {
 
             //扣钱飘字
             this.SUB_MONEY_FONT = {
-                source: PathGameTongyong.atlas_game_ui_tongyong+ "general.atlas",
+                source: PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
                 url: PathGameTongyong.ui_tongyong_general + 'clip_num.png',
-                clipWidth: 25,
+                clipWidth: 28,
                 clipHeight: 32,
                 clipX: 11,
                 space: -8
@@ -170,7 +170,7 @@ module gamebrniuniu {
         private _preSkin: string = null;
         private _postSkin: string = null;
         public setText(str: any, needZero: boolean = false, isTween: boolean = false, preSkin: string = null, postSkin: string = null): void {
-            if (this._num == str && this._needZero == needZero && this._isTween == isTween && this._preSkin == preSkin && this._postSkin == postSkin)  {
+            if (this._num == str && this._needZero == needZero && this._isTween == isTween && this._preSkin == preSkin && this._postSkin == postSkin) {
                 return;
             }
             this._num = str;

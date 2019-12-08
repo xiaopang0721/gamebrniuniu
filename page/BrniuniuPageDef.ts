@@ -22,8 +22,6 @@ module gamebrniuniu.page {
 		static PAGE_BRNIUNIU_END: string = "8";
 		//百人牛牛上庄列表界面
 		static PAGE_BRNIUNIU_SZ_LIST: string = "9";
-		//百人牛牛结算界面
-		static PAGE_BRNIUNIU_SETTLE: string = "10";
 		//百人牛牛游戏规则界面
 		static PAGE_BRNIUNIU_RULE: string = "101";
 
@@ -40,7 +38,6 @@ module gamebrniuniu.page {
 			PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU_PLAYER_LIST] = BrNiuNiuPlayerListPage;
 			PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU_END] = BrNiuNiuEndPage;
 			PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU_SZ_LIST] = BrNiuNiuSzListPage;
-			PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU_SETTLE] = BrNiuNiuSettlePage;
 
 
 			this["__needLoadAsset"] = [
