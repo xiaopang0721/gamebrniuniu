@@ -20,6 +20,7 @@ module gamebrniuniu.page {
 				PathGameTongyong.atlas_game_ui_tongyong + "dating.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "logo.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong_general + "anniu.atlas",
+				PathGameTongyong.atlas_game_ui_tongyong_general_effect + "anniug.atlas",
 			];
 			this._isNeedDuang = false;
 		}
@@ -106,7 +107,7 @@ module gamebrniuniu.page {
 						if (time <= 0) {
 							cell.state = "结算中...";
 						} else {
-							cell.state = "下注中..." + time + "s";
+							cell.state = "下注中" + time + "s";
 						}
 					} else {
 						cell.state = "结算中...";
@@ -166,8 +167,6 @@ module gamebrniuniu.page {
 		private show() {
 			this.txt_max.text = '投注限额：' + this._max;
 			this.img_bg.skin = PathGameTongyong.ui_tongyong + 'hud/difen_2_' + this.index + '.png';
-			// this.btn_enter.skin = PathGameTongyong.ui_tongyong + 'hud/btn_hud_' + this.index + '.png';
-			// this.img_tdxh.skin = Path_game_brniuniu.ui_brniuniu + 'tu_tdxh' + this.index + '.png';
 		}
 
 		private onClick() {

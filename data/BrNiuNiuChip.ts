@@ -22,7 +22,7 @@ module gamebrniuniu.data {
 			this._type = type;
 			this._startIndex = startIdx;
 			this._targetIndex = targetIdx - 1;
-			// this.rotateAngle = MathU.randomRange(0, 360);
+			this.rotateAngle = MathU.randomRange(0, 360);
 			this._seatIndex = unitIndex;
 		}
 
@@ -46,7 +46,7 @@ module gamebrniuniu.data {
 			this.targe_pos.x = target[index][0];
 			this.targe_pos.y = target[index][1];
 			if (!this.pos) return;
-			super.flyChipBase(500 + count * 15,game);
+			super.flyChipBase(500 + count * MathU.randomRange(0, 5), game);
 		}
 
 		drawChip() {

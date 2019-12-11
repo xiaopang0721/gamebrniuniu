@@ -11,8 +11,7 @@ module gamebrniuniu.story {
 		PLAY_STATUS_PUSH_CARD = 5, // 发牌阶段
 		PLAY_STATUS_SHOW_CARD = 6, // 开牌阶段
 		PLAY_STATUS_SETTLE = 7, // 结算阶段
-		PLAY_STATUS_SHOW_INFO = 8, // 显示结算信息阶段
-		PLAY_STATUS_RELAX = 9, // 休息阶段
+		PLAY_STATUS_RELAX = 8, // 休息阶段
 	}
 	const CARDS_COUNT = 5 // 场上共5副数
 	export class BrniuniuStory extends gamecomponent.story.StoryBaiRenBase {
@@ -93,8 +92,6 @@ module gamebrniuniu.story {
 					}
 					break;
 				case MAP_STATUS.PLAY_STATUS_SETTLE:// 结算阶段
-					break;
-				case MAP_STATUS.PLAY_STATUS_SHOW_INFO:// 显示结算信息阶段
 					break;
 				case MAP_STATUS.PLAY_STATUS_RELAX:// 休息阶段
 					break;

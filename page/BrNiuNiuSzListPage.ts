@@ -100,7 +100,7 @@ module gamebrniuniu.page {
 			}
 			if (!unitSz.length) this._isShenQing = false;
 			let url = this._isShenQing ? PathGameTongyong.ui_tongyong_general + "btn_qxsq.png" : PathGameTongyong.ui_tongyong_general + "btn_sqsz.png";
-			if (mainIndex == mapinfo.GetBankerSeat()) url = PathGameTongyong.ui_tongyong_general + "btn_sqxz.png";
+			if (mainIndex == mapinfo.GetBankerSeat()) url = PathGameTongyong.ui_tongyong_general + "btn_sq3.png";
 			this._viewUI.btn_shangzhuang.skin = url;
 		}
 
