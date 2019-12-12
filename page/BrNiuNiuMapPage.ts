@@ -99,6 +99,7 @@ module gamebrniuniu.page {
             this._delta = 1000;
             this._asset = [
                 DatingPath.atlas_dating_ui + "qifu.atlas",
+                PathGameTongyong.atlas_game_ui_tongyong + "qifu.atlas",
                 Path_game_brniuniu.atlas_game_ui + "brniuniu.atlas",
                 Path_game_brniuniu.atlas_game_ui_brniuniu + "niupai.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "pai.atlas",
@@ -293,8 +294,9 @@ module gamebrniuniu.page {
             if (mainUnit) {
                 let headImg = mainUnit.GetHeadImg();
                 this._viewUI.main_player.txt_name.text = getMainPlayerName(mainUnit.GetName());
-                let money = EnumToString.getPointBackNum(mainUnit.GetMoney(), 2);
-                this._viewUI.main_player.txt_money.text = money.toString();
+                if (this._curStatus != MAP_STATUS.PLAY_STATUS_SETTLE) {
+                    this._viewUI.main_player.txt_money.text = EnumToString.getPointBackNum(mainUnit.GetMoney(), 2).toString();
+                }
                 if (this._game.sceneObjectMgr.mainUnit.GetIndex() == this._niuMapInfo.GetBankerSeat()) {
                     this._viewUI.btn_repeat.disabled = true;
                 }
@@ -318,10 +320,6 @@ module gamebrniuniu.page {
                             this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
                         })
                     }
-                    // else {
-                    //     this._viewUI.main_player.img_qifu.visible = true;
-                    //     this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
-                    // }
                 } else {
                     this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
                     this._viewUI.main_player.img_qifu.visible = false;
@@ -330,6 +328,84 @@ module gamebrniuniu.page {
             this.updateBanker(0);
             this.onUpdateSeatedList(qifu_index);
             this.updateOnline();
+        }
+
+        private onUpdateSeatedList(qifu_index?: number): void {
+            if (!this._niuMapInfo) return;
+            let seatedList = this._niuMapInfo.GetSeatedList();
+            if (seatedList != "") {
+                this._unitSeated = JSON.parse(seatedList);
+            }
+            if (!this._unitSeated.length) {
+                return;
+            }
+            for (let i = 0; i < this._seatUIList.length; i++) {
+                let unitIndex = this._unitSeated[i][0];
+                let unit = this._game.sceneObjectMgr.getUnitByIdx(unitIndex);
+                let seat = this._seatUIList[i];
+                if (unit) {
+                    seat.img_txk.visible = true;
+                    seat.txt_name.text = getMainPlayerName(unit.GetName());
+                    if (this._curStatus != MAP_STATUS.PLAY_STATUS_SETTLE) {
+                        seat.txt_money.text = EnumToString.getPointBackNum(unit.GetMoney(), 2).toString();
+                    }
+                    seat.txt_name.fontSize = 15;
+                    seat.img_icon.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
+                    seat.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(unit.GetHeadKuangImg());
+                    seat.img_vip.visible = unit.GetVipLevel() > 0;
+                    seat.img_vip.skin = TongyongUtil.getVipUrl(unit.GetVipLevel());
+                    //祈福成功 头像上就有动画
+                    if (qifu_index && unitIndex == qifu_index) {
+                        seat.qifu_type.visible = true;
+                        seat.qifu_type.skin = this._qifuTypeImgUrl;
+                        this.playTween1(seat.qifu_type, qifu_index);
+                    }
+                    //时间戳变化 才加上祈福标志
+                    if (TongyongUtil.getIsHaveQiFu(unit, this._game.sync.serverTimeBys)) {
+                        if (qifu_index && unitIndex == qifu_index) {
+                            Laya.timer.once(2500, this, () => {
+                                seat.img_qifu.visible = true;
+                                seat.img_icon.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
+                            })
+                        }
+                    } else {
+                        seat.img_qifu.visible = false;
+                    }
+                } else {
+                    seat.txt_name.text = "";
+                    seat.txt_money.text = "点击入座";
+                    seat.txt_name.fontSize = 20;
+                    seat.img_icon.skin = PathGameTongyong.ui_tongyong_general + "tu_weizi.png";
+                    seat.img_qifu.visible = false;
+                    seat.qifu_type.visible = false;
+                    seat.img_txk.visible = false;
+                    seat.img_vip.visible = false;
+                }
+            }
+        }
+
+        private onUpdateSettleMoney(): void {
+            if (!this._niuMapInfo) return;
+            let mainUnit = this._game.sceneObjectMgr.mainUnit;
+            if (mainUnit) {
+                let money = EnumToString.getPointBackNum(mainUnit.GetMoney(), 2);
+                this._viewUI.main_player.txt_money.text = money.toString();
+            }
+            let seatedList = this._niuMapInfo.GetSeatedList();
+            if (seatedList != "") {
+                this._unitSeated = JSON.parse(seatedList);
+            }
+            if (!this._unitSeated.length) {
+                return;
+            }
+            for (let i = 0; i < this._seatUIList.length; i++) {
+                let unitIndex = this._unitSeated[i][0];
+                let unit = this._game.sceneObjectMgr.getUnitByIdx(unitIndex);
+                let seat = this._seatUIList[i];
+                if (unit) {
+                    seat.txt_money.text = EnumToString.getPointBackNum(unit.GetMoney(), 2).toString();
+                }
+            }
         }
 
         private _diff: number = 500;
@@ -395,14 +471,6 @@ module gamebrniuniu.page {
             let index = curHour >= 1 && curHour < 7 ? 0 : curHour >= 7 && curHour < 13 ? 1 : curHour >= 13 && curHour < 19 ? 2 : 3;
             let innerHtml = StringU.substitute("在线<span style='color:#18ff00'>{0}</span>人", onlineNum + this._robotConfig[index]);
             this._htmlText.innerHTML = innerHtml;
-        }
-
-        private updateMoney(): void {
-            let mainUnit = this._game.sceneObjectMgr.mainUnit;
-            if (mainUnit) {
-                let money = EnumToString.getPointBackNum(mainUnit.GetMoney(), 2);
-                this._viewUI.main_player.txt_money.text = money.toString();
-            }
         }
 
         //战斗结构体更新
@@ -680,8 +748,8 @@ module gamebrniuniu.page {
                     Laya.timer.once(1000, this, () => {
                         this._game.playSound(Path_game_brniuniu.music_brniuniu + "piaoqian.mp3", false);
                         for (let j = 0; j < 20; j++) {
-                            let ranType = MathU.randomRange(1, 5);
-                            let ranVal = this._chipArr[ranType - 1];
+                            let ranType = MathU.randomRange(0, 4);
+                            let ranVal = this._chipArr[ranType];
                             this._chipSortScore++;
                             this.bankerFlyChip(2, i + 1, ranType, ranVal, this._chipSortScore, -1);
                         }
@@ -916,16 +984,19 @@ module gamebrniuniu.page {
                     }
                     let isTongSha = true;
                     let isTongPei = true;
+                    let time_delay = 0;
                     for (let i = 0; i < this._resultList.length; i++) {
                         if (this._resultList[i] == 1) {
                             isTongPei = false;
+                            time_delay = 3000;
                         }
                         if (this._resultList[i] == -1) {
                             isTongSha = false;
+                            time_delay = 1000;
                         }
                     }
                     if (!this._isReConnect) {
-                        Laya.timer.once(3000, this, () => {
+                        Laya.timer.once(time_delay, this, () => {
                             if (isTongSha) {//庄家通杀
                                 this._game.playSound(Path_game_brniuniu.music_brniuniu + "zjtongchi.mp3", false);
                                 this._pageHandle.pushOpen({ id: BrniuniuPageDef.PAGE_NIUNIU_TONGSHA, parent: this._game.uiRoot.HUD });
@@ -945,6 +1016,8 @@ module gamebrniuniu.page {
                             }
                             this._pageHandle.updatePageHandle();//更新额外界面的开关状态
                             this._pageHandle.reset();//清空额外界面存储数组
+
+                            this.onUpdateSettleMoney();
                             if (this._clipResult && this._clipResult.length > 0) {
                                 for (let i = 0; i < this._clipResult.length; i++) {
                                     let info = this._clipResult[i];
@@ -970,6 +1043,8 @@ module gamebrniuniu.page {
                                 this._game.playSound(StringU.substitute(PathGameTongyong.music_tongyong + "lose{0}.mp3", rand), true);
                             }
                         }
+
+                        this.onUpdateSettleMoney();
                         if (this._clipResult && this._clipResult.length > 0) {
                             for (let i = 0; i < this._clipResult.length; i++) {
                                 let info = this._clipResult[i];
@@ -1005,9 +1080,9 @@ module gamebrniuniu.page {
                 this._viewUI.box_menu.visible = true;
                 this._viewUI.box_menu.scale(0.2, 0.2);
                 this._viewUI.box_menu.alpha = 0;
-                Laya.Tween.to(this._viewUI.box_menu, { scaleX: 1, scaleY: 1, alpha: 1 }, 500, Laya.Ease.backInOut);
+                Laya.Tween.to(this._viewUI.box_menu, { scaleX: 1, scaleY: 1, alpha: 1 }, 300, Laya.Ease.backInOut);
             } else {
-                Laya.Tween.to(this._viewUI.box_menu, { scaleX: 0.2, scaleY: 0.2, alpha: 0 }, 500, Laya.Ease.backInOut, Handler.create(this, () => {
+                Laya.Tween.to(this._viewUI.box_menu, { scaleX: 0.2, scaleY: 0.2, alpha: 0 }, 300, Laya.Ease.backInOut, Handler.create(this, () => {
                     this._viewUI.box_menu.visible = false;
                 }));
             }
@@ -1288,58 +1363,6 @@ module gamebrniuniu.page {
                     let val = recordArr[i];
                     recordArr[i] = recordArr[recordArr.length - 1 - i];
                     recordArr[recordArr.length - 1 - i] = val;
-                }
-            }
-        }
-
-        private onUpdateSeatedList(qifu_index?: number): void {
-            if (!this._niuMapInfo) return;
-            let seatedList = this._niuMapInfo.GetSeatedList();
-            if (seatedList != "") {
-                this._unitSeated = JSON.parse(seatedList);
-            }
-            if (!this._unitSeated.length) {
-                return;
-            }
-            for (let i = 0; i < this._seatUIList.length; i++) {
-                let unitIndex = this._unitSeated[i][0];
-                let unit = this._game.sceneObjectMgr.getUnitByIdx(unitIndex);
-                let seat = this._seatUIList[i];
-                if (unit) {
-                    seat.img_txk.visible = true;
-                    seat.txt_name.text = getMainPlayerName(unit.GetName());
-                    seat.txt_money.text = EnumToString.getPointBackNum(unit.GetMoney(), 2).toString();
-                    seat.txt_name.fontSize = 15;
-                    seat.img_icon.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
-                    seat.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(unit.GetHeadKuangImg());
-                    seat.img_vip.visible = unit.GetVipLevel() > 0;
-                    seat.img_vip.skin = TongyongUtil.getVipUrl(unit.GetVipLevel());
-                    //祈福成功 头像上就有动画
-                    if (qifu_index && unitIndex == qifu_index) {
-                        seat.qifu_type.visible = true;
-                        seat.qifu_type.skin = this._qifuTypeImgUrl;
-                        this.playTween1(seat.qifu_type, qifu_index);
-                    }
-                    //时间戳变化 才加上祈福标志
-                    if (TongyongUtil.getIsHaveQiFu(unit, this._game.sync.serverTimeBys)) {
-                        if (qifu_index && unitIndex == qifu_index) {
-                            Laya.timer.once(2500, this, () => {
-                                seat.img_qifu.visible = true;
-                                seat.img_icon.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
-                            })
-                        }
-                    } else {
-                        seat.img_qifu.visible = false;
-                    }
-                } else {
-                    seat.txt_name.text = "";
-                    seat.txt_money.text = "点击入座";
-                    seat.txt_name.fontSize = 20;
-                    seat.img_icon.skin = PathGameTongyong.ui_tongyong_general + "tu_weizi.png";
-                    seat.img_qifu.visible = false;
-                    seat.qifu_type.visible = false;
-                    seat.img_txk.visible = false;
-                    seat.img_vip.visible = false;
                 }
             }
         }
