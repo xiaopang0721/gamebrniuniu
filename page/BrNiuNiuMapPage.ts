@@ -107,7 +107,6 @@ module gamebrniuniu.page {
                 PathGameTongyong.atlas_game_ui_tongyong + "touxiang.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "chongzhi.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "nyl.atlas",
-                PathGameTongyong.atlas_game_ui_tongyong + "zjtp.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong_general + "anniu.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong_general_effect + "suiji.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong_general_effect + "fapai_1.atlas",
@@ -197,7 +196,10 @@ module gamebrniuniu.page {
         //帧间隔心跳
         deltaUpdate() {
             let bool = this._curStatus == MAP_STATUS.PLAY_STATUS_BET || this._curStatus == MAP_STATUS.PLAY_STATUS_SETTLE;
-            if (!bool) return;
+            if (!bool) {
+                this._viewUI.box_time.visible = false;
+                return;
+            }
             let curTime = this._game.sync.serverTimeBys;
             let time = Math.floor(this._countDown - curTime);
             this._viewUI.box_time.ani1.gotoAndStop(24);
@@ -738,13 +740,13 @@ module gamebrniuniu.page {
                 let chipArr = [];
                 chipArr = i == 0 ? this._chipTian : i == 1 ? this._chipDi : i == 2 ? this._chipXuan : this._chipHuang;
                 if (this._resultList[i] == 1) {
-                    this._areaKuangUIList[i].visible = true;
                     this._game.playSound(Path_game_brniuniu.music_brniuniu + "piaoqian.mp3", false);
                     for (let j = 0; j < chipArr.length; j++) {
                         let chip: BrNiuNiuChip = chipArr[j];
                         chip.flyChip(2, false, j, this._game);//庄家先收筹码
                     }
                 } else {
+                    this._areaKuangUIList[i].visible = true;
                     Laya.timer.once(1000, this, () => {
                         this._game.playSound(Path_game_brniuniu.music_brniuniu + "piaoqian.mp3", false);
                         for (let j = 0; j < 20; j++) {

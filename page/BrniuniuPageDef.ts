@@ -51,6 +51,7 @@ module gamebrniuniu.page {
 				PathGameTongyong.atlas_game_ui_tongyong + "dating.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "nyl.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "zjtp.atlas",
+				PathGameTongyong.atlas_game_ui_tongyong + "zjts.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong_general + "anniu.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong_general_effect + "anniug.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong_general_effect + "suiji.atlas",
