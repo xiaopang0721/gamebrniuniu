@@ -165,7 +165,7 @@ module gamebrniuniu.page {
 		}
 
 		private show() {
-			this.txt_max.text = '投注限额：' + this._max;
+			this.txt_max.text = this._max.toString();
 			this.img_bg.skin = PathGameTongyong.ui_tongyong + 'hud/difen_2_' + this.index + '.png';
 		}
 

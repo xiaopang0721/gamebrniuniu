@@ -136,7 +136,6 @@ module gamebrniuniu.page {
             }
             this._viewUI.mouseThrough = true;
             this._game.playMusic(Path_game_brniuniu.music_brniuniu + "nn_bgm.mp3");
-            this._viewUI.box_left.left = this._game.isFullScreen ? 25 : 5;
         }
 
         // 页面打开时执行函数
@@ -164,6 +163,7 @@ module gamebrniuniu.page {
             this._game.sceneObjectMgr.on(SceneObjectMgr.EVENT_UNIT_ACTION, this, this.onUpdateUnit);
             this._game.sceneObjectMgr.on(SceneObjectMgr.EVENT_MAPINFO_CHANGE, this, this.onUpdateMapInfo);
             this._game.sceneObjectMgr.on(SceneObjectMgr.EVENT_UNIT_QIFU_TIME_CHANGE, this, this.onUpdateUnit);
+            this._game.sceneObjectMgr.on(SceneObjectMgr.EVENT_MAIN_UNIT_CHANGE, this, this.onUpdateChipGrey);
 
             this._game.sceneObjectMgr.on(BrniuniuMapInfo.EVENT_BATTLE_CHECK, this, this.onUpdateBattle);
             this._game.sceneObjectMgr.on(BrniuniuMapInfo.EVENT_STATUS_CHECK, this, this.onUpdateStatus);
@@ -180,6 +180,24 @@ module gamebrniuniu.page {
             this.onUpdateUnitOffline();
             this.onUpdateSeatedList();
             this.onUpdateCountDown();
+        }
+
+        protected layout(): void {
+            super.layout();
+            if (this._viewUI) {
+                //全面屏
+                if (this._game.isFullScreen) {
+                    this._viewUI.box_top_left.left = 14 + 56;
+                    // this._viewUI.box_room_left.left = 105 + 56;
+                    this._viewUI.box_top_right.right = 28 + 56;
+                    this._viewUI.box_bottom_right.right = 12 + 56;
+                } else {
+                    this._viewUI.box_top_left.left = 14;
+                    // this._viewUI.box_room_left.left = 105;
+                    this._viewUI.box_top_right.right = 28;
+                    this._viewUI.box_bottom_right.right = 12;
+                }
+            }
         }
 
         private _curDiffTime: number;
@@ -260,15 +278,13 @@ module gamebrniuniu.page {
             }
         }
 
-        private onUpdateChipGrey(isBetState: boolean) {
+        private onUpdateChipGrey() {
             if (!this._game.sceneObjectMgr.mainUnit) return;
-            if (!isBetState) return;
             let money: number = this._game.sceneObjectMgr.mainUnit.GetMoney();
             for (let i = 0; i < this._chipUIList.length; i++) {
                 let index = this._chipUIList.length - 1 - i;
                 if (money < this._chipArr[index]) {
                     this._chipUIList[index].disabled = true;
-                    this._chipUIList[index].y = this._curChipY;
                 } else {
                     this._chipUIList[index].disabled = false;
                 }
@@ -670,12 +686,12 @@ module gamebrniuniu.page {
             if (cardType == 0) {//没牛
                 type = 0;
                 view.ani0.gotoAndStop(11);
-            } else if (cardType > 0 && cardType < 8) {//牛一到牛七
+            } else if (cardType > 0 && cardType < 7) {//牛一到牛六
                 type = 1;
                 view.ani1.gotoAndStop(14);
                 view.type1.skin = StringU.substitute(Path_game_brniuniu.ui_brniuniu_niupai + "n_{0}.png", cardType);
                 view.rate1.skin = StringU.substitute(Path_game_brniuniu.ui_brniuniu_niupai + "sz_{0}.png", this._niuMgr.checkCardsRate(cardType));
-            } else if (cardType >= 8 && cardType < 10) {//牛八，牛九
+            } else if (cardType >= 7 && cardType < 10) {//牛七，牛八，牛九
                 type = 2;
                 view.ani2.gotoAndStop(15);
                 view.type2_1.skin = StringU.substitute(Path_game_brniuniu.ui_brniuniu_niupai + "n_{0}.png", cardType);
@@ -1007,7 +1023,7 @@ module gamebrniuniu.page {
                                 // this._game.playSound(Path.music_qzniuniu + "zjtongpei.mp3", false);
                                 this._pageHandle.pushOpen({ id: BrniuniuPageDef.PAGE_NIUNIU_TONGPEI, parent: this._game.uiRoot.HUD });
                             }
-                            if (!isTongSha) {
+                            if (!isTongSha && !isTongPei) {
                                 if (this._mainPlayerBenefit >= 0) {
                                     let rand = MathU.randomRange(1, 3);
                                     this._game.playSound(StringU.substitute(PathGameTongyong.music_tongyong + "win{0}.mp3", rand), true);
@@ -1036,7 +1052,7 @@ module gamebrniuniu.page {
                             // this._game.playSound(Path.music_qzniuniu + "zjtongpei.mp3", false);
                             this._pageHandle.pushOpen({ id: BrniuniuPageDef.PAGE_NIUNIU_TONGPEI, parent: this._game.uiRoot.HUD });
                         }
-                        if (!isTongSha) {
+                        if (!isTongSha && !isTongPei) {
                             if (this._mainPlayerBenefit >= 0) {
                                 let rand = MathU.randomRange(1, 3);
                                 this._game.playSound(StringU.substitute(PathGameTongyong.music_tongyong + "win{0}.mp3", rand), true);
@@ -1289,13 +1305,15 @@ module gamebrniuniu.page {
 
         //筹码是否置灰（是否下注阶段）
         private onChipDisabled(isBetState: boolean): void {
-            this.onUpdateChipGrey(isBetState);
+            this.onUpdateChipGrey();
             this._viewUI.btn_repeat.disabled = !isBetState;
             if (isBetState) {
                 let index = this._chipArr.indexOf(this._curChip);
                 for (let i: number = 0; i < this._chipUIList.length; i++) {
                     Laya.Tween.to(this._chipUIList[i], { y: i == index ? this._curChipY - 10 : this._curChipY }, 300);
                     this._chipUIList[i].img0.visible = this._chipUIList[i].img1.visible = i == index;
+                    !this._chipUIList[i].disabled && (this._chipUIList[i].mouseEnabled = true);
+                    this._chipUIList[i].alpha = 1;
                     if (i == index) {
                         this._chipUIList[i].ani1.play(0, true);
                     } else {
@@ -1304,8 +1322,9 @@ module gamebrniuniu.page {
                 }
             } else {
                 for (let i: number = 0; i < this._chipUIList.length; i++) {
-                    Laya.Tween.to(this._chipUIList[i], { y: this._curChipY + 10 }, 300);
-                    this._chipUIList[i].disabled = true;
+                    Laya.Tween.to(this._chipUIList[i], { y: this._curChipY + 20 }, 300);
+                    !this._chipUIList[i].disabled && (this._chipUIList[i].mouseEnabled = false);
+                    this._chipUIList[i].alpha = 0.75;
                     this._chipUIList[i].ani1.gotoAndStop(0);
                     this._chipUIList[i].img0.visible = this._chipUIList[i].img1.visible = false;
                 }
@@ -1639,6 +1658,7 @@ module gamebrniuniu.page {
                 this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_UNIT_ACTION, this, this.onUpdateUnit);
                 this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_MAPINFO_CHANGE, this, this.onUpdateMapInfo);
                 this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_UNIT_QIFU_TIME_CHANGE, this, this.onUpdateUnit);
+                this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_MAIN_UNIT_CHANGE, this, this.onUpdateChipGrey);
 
                 this._game.sceneObjectMgr.off(BrniuniuMapInfo.EVENT_BATTLE_CHECK, this, this.onUpdateBattle);
                 this._game.sceneObjectMgr.off(BrniuniuMapInfo.EVENT_STATUS_CHECK, this, this.onUpdateStatus);
