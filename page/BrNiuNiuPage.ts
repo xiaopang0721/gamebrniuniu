@@ -9,6 +9,7 @@ module gamebrniuniu.page {
 		private _player: any;
 		private _playerInfo: any;
 		private _niuHudMgr: BrNiuNiuHudMgr;
+		private _avatar: AvatarUIShow;
 
 		constructor(v: Game, onOpenFunc?: Function, onCloseFunc?: Function) {
 			super(v, onOpenFunc, onCloseFunc);
@@ -21,6 +22,7 @@ module gamebrniuniu.page {
 				PathGameTongyong.atlas_game_ui_tongyong + "logo.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong_general + "anniu.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong_general_effect + "anniug.atlas",
+				Path_game_brniuniu.ui_brniuniu_sk + "bairenniuniu.png",
 			];
 			this._isNeedDuang = false;
 		}
@@ -42,6 +44,11 @@ module gamebrniuniu.page {
 		protected onOpen(): void {
 			super.onOpen();
 			(this._viewUI.view as TongyongHudPage).onOpen(this._game, BrniuniuPageDef.GAME_NAME);
+			if (!this._avatar) {
+				this._avatar = new AvatarUIShow();
+				this._viewUI.box_sk.addChild(this._avatar);
+			}
+			this._avatar.loadSkeleton(Path_game_brniuniu.ui_brniuniu_sk + "bairenniuniu", 208, 376);
 			this._game.playMusic(Path_game_brniuniu.music_brniuniu + "nn_bgm.mp3");
 
 			let datas = [];
@@ -64,6 +71,11 @@ module gamebrniuniu.page {
 					this._niuHudMgr.clear();
 					this._niuHudMgr = null;
 				}
+				if (this._avatar) {
+					this._avatar.clear();
+					this._avatar.destroy();
+					this._avatar = null;
+				}
 				this._game.stopMusic();
 				Laya.Tween.clearAll(this);
 			}
@@ -78,6 +90,9 @@ module gamebrniuniu.page {
 
 		//帧心跳
 		update(diff: number) {
+			if (this._avatar) {
+				this._avatar.onDraw();
+			}
 			if (this._niuHudMgr) {
 				this._niuHudMgr.update(diff);
 			}

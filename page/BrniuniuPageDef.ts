@@ -10,16 +10,12 @@ module gamebrniuniu.page {
 		static PAGE_BRNIUNIU_MAP: string = "2";
 		//百人牛牛开始下注界面
 		static PAGE_BRNIUNIU_BEGIN: string = "3";
-		//牛牛游戏通杀界面
-		static PAGE_NIUNIU_TONGSHA: string = "4";
-		//牛牛游戏通赔界面
-		static PAGE_NIUNIU_TONGPEI: string = "5";
 		//百人牛牛游戏匹配界面
-		static PAGE_BRNIUNIU_PIPEI: string = "6";
+		static PAGE_BRNIUNIU_PIPEI: string = "4";
 		//百人牛牛停止下注界面
-		static PAGE_BRNIUNIU_END: string = "7";
+		static PAGE_BRNIUNIU_END: string = "5";
 		//百人牛牛上庄列表界面
-		static PAGE_BRNIUNIU_SZ_LIST: string = "8";
+		static PAGE_BRNIUNIU_SZ_LIST: string = "6";
 		//百人牛牛游戏规则界面
 		static PAGE_BRNIUNIU_RULE: string = "101";
 
@@ -30,8 +26,6 @@ module gamebrniuniu.page {
 			PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU] = BrNiuNiuPage;
 			PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU_MAP] = BrNiuNiuMapPage;
 			PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU_BEGIN] = BrNiuNiuBeginPage;
-			PageDef._pageClassMap[BrniuniuPageDef.PAGE_NIUNIU_TONGSHA] = BrNiuNiuTongShaPage;
-			PageDef._pageClassMap[BrniuniuPageDef.PAGE_NIUNIU_TONGPEI] = BrNiuNiuTongPeiPage;
 			PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU_RULE] = BrNiuNiuRulePage;
 			PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU_END] = BrNiuNiuEndPage;
 			PageDef._pageClassMap[BrniuniuPageDef.PAGE_BRNIUNIU_SZ_LIST] = BrNiuNiuSzListPage;
@@ -42,6 +36,7 @@ module gamebrniuniu.page {
 				PathGameTongyong.atlas_game_ui_tongyong + "qifu.atlas",
 				Path_game_brniuniu.atlas_game_ui + "brniuniu.atlas",
 				Path_game_brniuniu.atlas_game_ui_brniuniu + "niupai.atlas",
+				Path_game_brniuniu.ui_brniuniu_sk + "bairenniuniu.png",
 				PathGameTongyong.atlas_game_ui_tongyong + "pai.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "touxiang.atlas",

@@ -63,6 +63,7 @@ module gamebrniuniu.page {
         private _countDown: number;//倒计时时间戳
         private _curChip: number;//当前选择筹码
         private _curChipY: number = 55;//当前选择筹码y轴位置
+        private _btnRepeatY: number;//重复下注位置
         private _chipSortScore: number = 0;//筹码层级
         private _chipTian: Array<any> = [];//天所有筹码
         private _chipDi: Array<any> = [];//地所有筹码
@@ -163,7 +164,6 @@ module gamebrniuniu.page {
             this._game.sceneObjectMgr.on(SceneObjectMgr.EVENT_UNIT_ACTION, this, this.onUpdateUnit);
             this._game.sceneObjectMgr.on(SceneObjectMgr.EVENT_MAPINFO_CHANGE, this, this.onUpdateMapInfo);
             this._game.sceneObjectMgr.on(SceneObjectMgr.EVENT_UNIT_QIFU_TIME_CHANGE, this, this.onUpdateUnit);
-            this._game.sceneObjectMgr.on(SceneObjectMgr.EVENT_MAIN_UNIT_CHANGE, this, this.onUpdateChipGrey);
 
             this._game.sceneObjectMgr.on(BrniuniuMapInfo.EVENT_BATTLE_CHECK, this, this.onUpdateBattle);
             this._game.sceneObjectMgr.on(BrniuniuMapInfo.EVENT_STATUS_CHECK, this, this.onUpdateStatus);
@@ -272,21 +272,9 @@ module gamebrniuniu.page {
                 this.onUpdateRecord();
                 this.onUpdateSeatedList();
                 this.updateRoad();
+                this.onUpdateChipGrey();
                 if (!this._niuMgr.isReDrawCards) {
                     this._viewUI.paixie.ani2.gotoAndStop(0)
-                }
-            }
-        }
-
-        private onUpdateChipGrey() {
-            if (!this._game.sceneObjectMgr.mainUnit) return;
-            let money: number = this._game.sceneObjectMgr.mainUnit.GetMoney();
-            for (let i = 0; i < this._chipUIList.length; i++) {
-                let index = this._chipUIList.length - 1 - i;
-                if (money < this._chipArr[index]) {
-                    this._chipUIList[index].disabled = true;
-                } else {
-                    this._chipUIList[index].disabled = false;
                 }
             }
         }
@@ -330,18 +318,22 @@ module gamebrniuniu.page {
                     this._viewUI.main_player.qifu_type.skin = this._qifuTypeImgUrl;
                     this.playTween(this._viewUI.main_player.qifu_type, qifu_index);
                 }
-                //时间戳变化 才加上祈福标志
-                if (TongyongUtil.getIsHaveQiFu(mainUnit, this._game.sync.serverTimeBys)) {
-                    if (qifu_index && mainIdx == qifu_index) {
-                        Laya.timer.once(2500, this, () => {
-                            this._viewUI.main_player.img_qifu.visible = true;
-                            this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
-                        })
-                    }
-                } else {
-                    this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
-                    this._viewUI.main_player.img_qifu.visible = false;
+                //祈福成功 头像上就有动画
+                if (qifu_index && mainIdx == qifu_index) {
+                    this._viewUI.main_player.qifu_type.visible = true;
+                    this._viewUI.main_player.qifu_type.skin = this._qifuTypeImgUrl;
+                    //时间戳变化 才加上祈福标志
+                    this.playTween(this._viewUI.main_player.qifu_type, qifu_index);
+                    Laya.timer.once(2500, this, () => {
+                        this._viewUI.main_player.img_qifu.visible = true;
+                        this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
+                    })
                 }
+                else {
+                    this._viewUI.main_player.img_qifu.visible = TongyongUtil.getIsHaveQiFu(mainUnit, this._game.sync.serverTimeBys);
+                    this._viewUI.main_player.img_icon.skin = TongyongUtil.getHeadUrl(mainUnit.GetHeadImg(), 2);
+                }
+                this.onUpdateChipGrey();
             }
             this.updateBanker(0);
             this.onUpdateSeatedList(qifu_index);
@@ -633,9 +625,7 @@ module gamebrniuniu.page {
             } else if (targetIdx == 4) {
                 this._chipHuang.push(chip);
             }
-            Laya.timer.once(500, this, () => {
-                chip.sendChip();
-            })
+            chip.sendChip();
         }
 
         private _clipResult: any[] = [];
@@ -750,7 +740,7 @@ module gamebrniuniu.page {
         }
 
         //结算飘筹码
-        private flyChipEffect(): void {
+        private flyChipEffect(isTongPei): void {
             //遍历四个区域的游戏结果
             for (let i = 0; i < this._resultList.length; i++) {
                 let chipArr = [];
@@ -763,7 +753,7 @@ module gamebrniuniu.page {
                     }
                 } else {
                     this._areaKuangUIList[i].visible = true;
-                    Laya.timer.once(1000, this, () => {
+                    Laya.timer.once(isTongPei ? 0 : 1000, this, () => {
                         this._game.playSound(Path_game_brniuniu.music_brniuniu + "piaoqian.mp3", false);
                         for (let j = 0; j < 20; j++) {
                             let ranType = MathU.randomRange(0, 4);
@@ -772,7 +762,7 @@ module gamebrniuniu.page {
                             this.bankerFlyChip(2, i + 1, ranType, ranVal, this._chipSortScore, -1);
                         }
                     })
-                    Laya.timer.once(2000, this, () => {
+                    Laya.timer.once(isTongPei ? 1000 : 2000, this, () => {
                         this._game.playSound(Path_game_brniuniu.music_brniuniu + "piaoqian.mp3", false);
                         for (let j = 0; j < chipArr.length; j++) {
                             let chip: BrNiuNiuChip = chipArr[j];
@@ -894,8 +884,8 @@ module gamebrniuniu.page {
             if (this._curStatus > MAP_STATUS.PLAY_STATUS_WASH_CARD) {
                 this._viewUI.paixie.ani_chupai.gotoAndStop(12);
             }
-            if (this._game.uiRoot.HUD.isOpened(BrniuniuPageDef.PAGE_NIUNIU_TONGSHA) && this._curStatus >= MAP_STATUS.PLAY_STATUS_WASH_CARD) {
-                this._pageHandle.pushClose({ id: BrniuniuPageDef.PAGE_NIUNIU_TONGSHA, parent: this._game.uiRoot.HUD });
+            if (this._game.uiRoot.HUD.isOpened(TongyongPageDef.PAGE_TONGYONG_ZJTS) && this._curStatus >= MAP_STATUS.PLAY_STATUS_WASH_CARD) {
+                this._pageHandle.pushClose({ id: TongyongPageDef.PAGE_TONGYONG_ZJTS, parent: this._game.uiRoot.HUD });
             }
             switch (this._curStatus) {
                 case MAP_STATUS.PLAY_STATUS_NONE:// 准备阶段
@@ -989,68 +979,35 @@ module gamebrniuniu.page {
                     }
                     if (this._isReConnect && !this._drawCardType) {
                         this.onReconnectDeal();
+                        this._isReConnect = false;
                     }
                     break;
                 case MAP_STATUS.PLAY_STATUS_SETTLE:// 结算阶段
                     this.onUpdateSeatedList();
                     this._viewUI.txt_status.index = 6;
                     if (!this._isReConnect) {
-                        this.flyChipEffect();
                     }
                     if (this._isReConnect && !this._drawCardType) {
                         this.onReconnectDeal();
                     }
                     let isTongSha = true;
                     let isTongPei = true;
-                    let time_delay = 0;
                     for (let i = 0; i < this._resultList.length; i++) {
                         if (this._resultList[i] == 1) {
                             isTongPei = false;
-                            time_delay = 3000;
                         }
                         if (this._resultList[i] == -1) {
                             isTongSha = false;
-                            time_delay = 1000;
                         }
                     }
                     if (!this._isReConnect) {
-                        Laya.timer.once(time_delay, this, () => {
-                            if (isTongSha) {//庄家通杀
-                                this._game.playSound(Path_game_brniuniu.music_brniuniu + "zjtongchi.mp3", false);
-                                this._pageHandle.pushOpen({ id: BrniuniuPageDef.PAGE_NIUNIU_TONGSHA, parent: this._game.uiRoot.HUD });
-                            }
-                            if (isTongPei) {//庄家通赔
-                                // this._game.playSound(Path.music_qzniuniu + "zjtongpei.mp3", false);
-                                this._pageHandle.pushOpen({ id: BrniuniuPageDef.PAGE_NIUNIU_TONGPEI, parent: this._game.uiRoot.HUD });
-                            }
-                            if (!isTongSha && !isTongPei) {
-                                if (this._mainPlayerBenefit >= 0) {
-                                    let rand = MathU.randomRange(1, 3);
-                                    this._game.playSound(StringU.substitute(PathGameTongyong.music_tongyong + "win{0}.mp3", rand), true);
-                                } else if (this._mainPlayerBenefit < 0) {
-                                    let rand = MathU.randomRange(1, 4);
-                                    this._game.playSound(StringU.substitute(PathGameTongyong.music_tongyong + "lose{0}.mp3", rand), true);
-                                }
-                            }
-                            this._pageHandle.updatePageHandle();//更新额外界面的开关状态
-                            this._pageHandle.reset();//清空额外界面存储数组
-
-                            this.onUpdateSettleMoney();
-                            if (this._clipResult && this._clipResult.length > 0) {
-                                for (let i = 0; i < this._clipResult.length; i++) {
-                                    let info = this._clipResult[i];
-                                    this.addMoneyClip(info[0], info[1]);
-                                }
-                            }
-                        });
-                    } else {
                         if (isTongSha) {//庄家通杀
                             this._game.playSound(Path_game_brniuniu.music_brniuniu + "zjtongchi.mp3", false);
-                            this._pageHandle.pushOpen({ id: BrniuniuPageDef.PAGE_NIUNIU_TONGSHA, parent: this._game.uiRoot.HUD });
+                            this._pageHandle.pushOpen({ id: TongyongPageDef.PAGE_TONGYONG_ZJTS, parent: this._game.uiRoot.HUD });
                         }
                         if (isTongPei) {//庄家通赔
                             // this._game.playSound(Path.music_qzniuniu + "zjtongpei.mp3", false);
-                            this._pageHandle.pushOpen({ id: BrniuniuPageDef.PAGE_NIUNIU_TONGPEI, parent: this._game.uiRoot.HUD });
+                            this._pageHandle.pushOpen({ id: TongyongPageDef.PAGE_TONGYONG_ZJTP, parent: this._game.uiRoot.HUD });
                         }
                         if (!isTongSha && !isTongPei) {
                             if (this._mainPlayerBenefit >= 0) {
@@ -1061,19 +1018,27 @@ module gamebrniuniu.page {
                                 this._game.playSound(StringU.substitute(PathGameTongyong.music_tongyong + "lose{0}.mp3", rand), true);
                             }
                         }
-
-                        this.onUpdateSettleMoney();
-                        if (this._clipResult && this._clipResult.length > 0) {
-                            for (let i = 0; i < this._clipResult.length; i++) {
-                                let info = this._clipResult[i];
-                                this.addMoneyClip(info[0], info[1]);
+                        this._pageHandle.updatePageHandle();//更新额外界面的开关状态
+                        this._pageHandle.reset();//清空额外界面存储数组
+                        let time_delay = isTongPei || isTongSha ? 1000 : 0;//飘筹码延迟
+                        let fly_delay = isTongSha ? 800 : isTongPei ? 1800 : 2800;//飘字延迟
+                        Laya.timer.once(time_delay, this, () => {
+                            this.flyChipEffect(isTongPei);
+                        });
+                        Laya.timer.once(time_delay + fly_delay, this, () => {
+                            this.onUpdateSettleMoney();
+                            if (this._clipResult && this._clipResult.length > 0) {
+                                for (let i = 0; i < this._clipResult.length; i++) {
+                                    let info = this._clipResult[i];
+                                    this.addMoneyClip(info[0], info[1]);
+                                }
                             }
-                        }
+                        });
                     }
                     break;
                 case MAP_STATUS.PLAY_STATUS_RELAX:// 休息阶段
-                    this._pageHandle.pushClose({ id: BrniuniuPageDef.PAGE_NIUNIU_TONGSHA, parent: this._game.uiRoot.HUD });
-                    this._pageHandle.pushClose({ id: BrniuniuPageDef.PAGE_NIUNIU_TONGPEI, parent: this._game.uiRoot.HUD });
+                    this._pageHandle.pushClose({ id: TongyongPageDef.PAGE_TONGYONG_ZJTS, parent: this._game.uiRoot.HUD });
+                    this._pageHandle.pushClose({ id: TongyongPageDef.PAGE_TONGYONG_ZJTP, parent: this._game.uiRoot.HUD });
                     this._viewUI.txt_status.index = 1;
                     this.resetAll();
                     Laya.Tween.clearAll(this);
@@ -1305,12 +1270,14 @@ module gamebrniuniu.page {
 
         //筹码是否置灰（是否下注阶段）
         private onChipDisabled(isBetState: boolean): void {
-            this.onUpdateChipGrey();
             this._viewUI.btn_repeat.disabled = !isBetState;
             if (isBetState) {
+                Laya.Tween.to(this._viewUI.btn_repeat, { y: this._btnRepeatY }, 300);
                 let index = this._chipArr.indexOf(this._curChip);
                 for (let i: number = 0; i < this._chipUIList.length; i++) {
-                    Laya.Tween.to(this._chipUIList[i], { y: i == index ? this._curChipY - 10 : this._curChipY }, 300);
+                    Laya.Tween.to(this._chipUIList[i], { y: i == index ? this._curChipY - 10 : this._curChipY }, 300, null, Handler.create(this, () => {
+                        this._isTweenOver = true;
+                    }));
                     this._chipUIList[i].img0.visible = this._chipUIList[i].img1.visible = i == index;
                     !this._chipUIList[i].disabled && (this._chipUIList[i].mouseEnabled = true);
                     this._chipUIList[i].alpha = 1;
@@ -1321,12 +1288,39 @@ module gamebrniuniu.page {
                     }
                 }
             } else {
+                Laya.Tween.to(this._viewUI.btn_repeat, { y: this._btnRepeatY + 20 }, 300);
                 for (let i: number = 0; i < this._chipUIList.length; i++) {
                     Laya.Tween.to(this._chipUIList[i], { y: this._curChipY + 20 }, 300);
                     !this._chipUIList[i].disabled && (this._chipUIList[i].mouseEnabled = false);
                     this._chipUIList[i].alpha = 0.75;
                     this._chipUIList[i].ani1.gotoAndStop(0);
                     this._chipUIList[i].img0.visible = this._chipUIList[i].img1.visible = false;
+                }
+            }
+        }
+
+        private _isTweenOver: boolean = false;
+        private onUpdateChipGrey() {
+            if (!this._game.sceneObjectMgr.mainUnit) return;
+            let money: number = this._game.sceneObjectMgr.mainUnit.GetMoney();
+            let curMaxChipIndex: number = -1;
+            for (let i = 0; i < this._chipUIList.length; i++) {
+                let index = this._chipUIList.length - 1 - i;
+                let chipUI = this._chipUIList[index];
+                if (money < this._chipArr[index]) {
+                    chipUI.disabled = true;
+                } else {
+                    if (curMaxChipIndex == -1) {
+                        curMaxChipIndex = index;
+                    }
+                    chipUI.disabled = false;
+                }
+            }
+            //如果因为钱不够导致当前选中筹码被置灰，则向下调整选中筹码
+            let curChipIndex = this._chipArr.indexOf(this._curChip);
+            if (curChipIndex > curMaxChipIndex && this._isTweenOver) {
+                if (this._curStatus == MAP_STATUS.PLAY_STATUS_BET) {
+                    this.onSelectChip(curMaxChipIndex);
                 }
             }
         }
@@ -1446,6 +1440,7 @@ module gamebrniuniu.page {
             this._viewUI.main_player.clip_money.visible = false;
             this._viewUI.main_player.effWin.visible = false;
             //界面UI
+            this._btnRepeatY = this._viewUI.btn_repeat.y;
             this._viewUI.txt_id.visible = false;
             this._viewUI.box_time.visible = false;
             this._viewUI.xipai.visible = false;
@@ -1658,7 +1653,6 @@ module gamebrniuniu.page {
                 this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_UNIT_ACTION, this, this.onUpdateUnit);
                 this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_MAPINFO_CHANGE, this, this.onUpdateMapInfo);
                 this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_UNIT_QIFU_TIME_CHANGE, this, this.onUpdateUnit);
-                this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_MAIN_UNIT_CHANGE, this, this.onUpdateChipGrey);
 
                 this._game.sceneObjectMgr.off(BrniuniuMapInfo.EVENT_BATTLE_CHECK, this, this.onUpdateBattle);
                 this._game.sceneObjectMgr.off(BrniuniuMapInfo.EVENT_STATUS_CHECK, this, this.onUpdateStatus);
@@ -1701,8 +1695,8 @@ module gamebrniuniu.page {
 
                 this._game.uiRoot.HUD.close(BrniuniuPageDef.PAGE_BRNIUNIU_BEGIN);
                 this._game.uiRoot.HUD.close(BrniuniuPageDef.PAGE_BRNIUNIU_END);
-                this._game.uiRoot.HUD.close(BrniuniuPageDef.PAGE_NIUNIU_TONGSHA);
-                this._game.uiRoot.HUD.close(BrniuniuPageDef.PAGE_NIUNIU_TONGPEI);
+                this._game.uiRoot.HUD.close(TongyongPageDef.PAGE_TONGYONG_ZJTS);
+                this._game.uiRoot.HUD.close(TongyongPageDef.PAGE_TONGYONG_ZJTP);
                 this._game.stopAllSound();
                 this._game.stopMusic();
                 this._niuStory && this._niuStory.clear();
