@@ -110,6 +110,7 @@ module gamebrniuniu.story {
 			this._niuMgr.Init(this._dealCards, handle);
 			this._niuMgr.sort();
 			this._niuMgr.fapai();
+			this.niuMgr.isReDrawCards = false;
 		}
 
 		//断线重连,重发下牌

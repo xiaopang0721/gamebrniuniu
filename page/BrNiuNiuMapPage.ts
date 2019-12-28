@@ -22,11 +22,11 @@ module gamebrniuniu.page {
         "73": [10, 20, 50, 100, 500],  //老板
         "74": [20, 50, 100, 500, 1000],  //富豪
     };
-    const ROBOT_NUM_CONFIG = {
-        "71": [100, 150, 200, 300],     //新手
-        "72": [70, 100, 130, 200],   //小资
-        "73": [30, 60, 100, 150],  //老板
-        "74": [10, 30, 60, 90],  //富豪
+    const ONLINE_NUM_RATE_CONFIG = {
+        "71": 0.6,     //新手
+        "72": 0.5,   //小资
+        "73": 0.4,  //老板
+        "74": 0.35,  //富豪
     };
     export class BrNiuNiuMapPage extends game.gui.base.Page {
         static readonly MONEY_LIMIT_CONFIG = {
@@ -54,11 +54,11 @@ module gamebrniuniu.page {
         private _clipList: Array<BrniuniuClip> = [];//飘字集合
         private _imgdiList: Array<LImage> = [];//飘字底集合
         private _resultList: Array<number> = [];//结算结果集合
+        private _onlineNumRate: number = 1;//在线人数比例
         private _bankerCards: any;//庄家手牌信息
         private _szlimit: number;//上庄金币
         private _seatlimit: number;//入座金币
         private _betlimit: number;//投注限额
-        private _robotConfig: any;//机器人配置
         private _curStatus: number;//当前地图状态
         private _countDown: number;//倒计时时间戳
         private _curChip: number;//当前选择筹码
@@ -273,6 +273,7 @@ module gamebrniuniu.page {
                 this.onUpdateSeatedList();
                 this.updateRoad();
                 this.onUpdateChipGrey();
+                this.updateOnline();
                 if (!this._niuMgr.isReDrawCards) {
                     this._viewUI.paixie.ani2.gotoAndStop(0)
                 }
@@ -337,7 +338,6 @@ module gamebrniuniu.page {
             }
             this.updateBanker(0);
             this.onUpdateSeatedList(qifu_index);
-            this.updateOnline();
         }
 
         private onUpdateSeatedList(qifu_index?: number): void {
@@ -467,19 +467,17 @@ module gamebrniuniu.page {
         }
 
         private updateOnline(): void {
-            if (!this._robotConfig) return;
-            let onlineNum = 0;
+            let unitNum = 0;
             for (let key in this._game.sceneObjectMgr.unitDic) {
                 if (this._game.sceneObjectMgr.unitDic.hasOwnProperty(key)) {
                     let unit = this._game.sceneObjectMgr.unitDic[key];
                     if (unit) {
-                        onlineNum++;
+                        unitNum++;
                     }
                 }
             }
-            let curHour = Sync.getHours(this._game.sync.serverTimeBys * 1000);//当前几点钟
-            let index = curHour >= 1 && curHour < 7 ? 0 : curHour >= 7 && curHour < 13 ? 1 : curHour >= 13 && curHour < 19 ? 2 : 3;
-            let innerHtml = StringU.substitute("在线<span style='color:#18ff00'>{0}</span>人", onlineNum + this._robotConfig[index]);
+            let onlineNum = Math.floor(this._game.datingGame.OnlineNumMgr.getOnlineNum(this._niuMapInfo.GetMapID()) * this._onlineNumRate);
+            let innerHtml = StringU.substitute("在线<span style='color:#18ff00'>{0}</span>人", unitNum + onlineNum);
             this._htmlText.innerHTML = innerHtml;
         }
 
@@ -823,7 +821,7 @@ module gamebrniuniu.page {
             playerIcon.img_di.visible = false;
             //飘字
             clip_money.setText(Math.abs(value), true, false, preSkin);
-            clip_money.centerX = playerIcon.clip_money.centerX;
+            clip_money.centerX = playerIcon.clip_money.centerX - 4;
             clip_money.centerY = playerIcon.clip_money.centerY;
             playerIcon.clip_money.parent.addChild(clip_money);
             this._clipList.push(clip_money);
@@ -832,7 +830,7 @@ module gamebrniuniu.page {
             playerIcon.box_clip.y = 57;
             playerIcon.box_clip.visible = true;
             Laya.Tween.clearAll(playerIcon.box_clip);
-            Laya.Tween.to(playerIcon.box_clip, { y: playerIcon.box_clip.y - 50 }, 1000);
+            Laya.Tween.to(playerIcon.box_clip, { y: playerIcon.box_clip.y - 55 }, 700);
             //赢钱动画
             playerIcon.effWin.visible = value > 0;
             value > 0 && playerIcon.effWin.ani1.play(0, false);
@@ -895,6 +893,7 @@ module gamebrniuniu.page {
                     Laya.timer.clearAll(this);
                     break;
                 case MAP_STATUS.PLAY_STATUS_GAMESTART:// 游戏开始
+                    this.updateOnline();
                     this.resetAll();
                     Laya.Tween.clearAll(this);
                     Laya.timer.clearAll(this);
@@ -985,8 +984,6 @@ module gamebrniuniu.page {
                 case MAP_STATUS.PLAY_STATUS_SETTLE:// 结算阶段
                     this.onUpdateSeatedList();
                     this._viewUI.txt_status.index = 6;
-                    if (!this._isReConnect) {
-                    }
                     if (this._isReConnect && !this._drawCardType) {
                         this.onReconnectDeal();
                     }
@@ -1256,14 +1253,23 @@ module gamebrniuniu.page {
 
         //选择筹码
         private onSelectChip(index: number): void {
-            this._curChip = this._chipArr[index];
-            for (let i: number = 0; i < this._chipUIList.length; i++) {
-                this._chipUIList[i].y = i == index ? this._curChipY - 10 : this._curChipY;
-                this._chipUIList[i].img0.visible = this._chipUIList[i].img1.visible = i == index;
-                if (i == index) {
-                    this._chipUIList[i].ani1.play(0, true);
-                } else {
+            if (this._game.sceneObjectMgr.mainUnit && this._game.sceneObjectMgr.mainUnit.GetMoney() < this._chipArr[0]) {
+                this._curChip = -1;
+                for (let i: number = 0; i < this._chipUIList.length; i++) {
+                    this._chipUIList[i].y = this._curChipY;
+                    this._chipUIList[i].img0.visible = this._chipUIList[i].img1.visible = false;
                     this._chipUIList[i].ani1.gotoAndStop(0);
+                }
+            } else {
+                this._curChip = this._chipArr[index];
+                for (let i: number = 0; i < this._chipUIList.length; i++) {
+                    this._chipUIList[i].y = i == index ? this._curChipY - 10 : this._curChipY;
+                    this._chipUIList[i].img0.visible = this._chipUIList[i].img1.visible = i == index;
+                    if (i == index) {
+                        this._chipUIList[i].ani1.play(0, true);
+                    } else {
+                        this._chipUIList[i].ani1.gotoAndStop(0);
+                    }
                 }
             }
         }
@@ -1272,6 +1278,9 @@ module gamebrniuniu.page {
         private onChipDisabled(isBetState: boolean): void {
             this._viewUI.btn_repeat.disabled = !isBetState;
             if (isBetState) {
+                if (this._curChip == -1 && this._game.sceneObjectMgr.mainUnit.GetMoney() >= this._chipArr[0]) {
+                    this._curChip = this._chipArr[0];
+                }
                 Laya.Tween.to(this._viewUI.btn_repeat, { y: this._btnRepeatY }, 300);
                 let index = this._chipArr.indexOf(this._curChip);
                 for (let i: number = 0; i < this._chipUIList.length; i++) {
@@ -1459,17 +1468,13 @@ module gamebrniuniu.page {
             if (maplv) {
                 let config = ROOM_CHIP_CONFIG[maplv];
                 config && (this._chipArr = config);
-                config = ROBOT_NUM_CONFIG[maplv];
-                config && (this._robotConfig = config);
+                config && (this._onlineNumRate = ONLINE_NUM_RATE_CONFIG[maplv]);
                 config = BrNiuNiuMapPage.MONEY_LIMIT_CONFIG[maplv];
                 config && (this._szlimit = config[0]);
                 config && (this._seatlimit = config[1]);
                 config && (this._betlimit = config[2]);
 
                 this._viewUI.txt_limit.text = this._szlimit.toString();
-                if (this._robotConfig) {
-                    this.updateOnline();
-                }
                 if (!this._chipArr) return;
                 for (let i = 0; i < this._chipArr.length; i++) {
                     this._chipUIList[i].btn_num.label = this._chipArr[i].toString();
