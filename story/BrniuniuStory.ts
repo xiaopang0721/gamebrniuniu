@@ -21,6 +21,7 @@ module gamebrniuniu.story {
 		private _niuMapInfo: BrniuniuMapInfo;
 		private _dealCards: Array<number> = [];
 		private _openCards: Array<number> = [];
+		private _isNormalDeal: boolean = false;
 
 		constructor(v: Game, mapid: string, maplv: number) {
 			super(v, mapid, maplv);
@@ -76,9 +77,12 @@ module gamebrniuniu.story {
 				case MAP_STATUS.PLAY_STATUS_BET:// 下注阶段
 					break;
 				case MAP_STATUS.PLAY_STATUS_STOP_BET:// 停止下注阶段
+					this._isNormalDeal = true;
 					break;
 				case MAP_STATUS.PLAY_STATUS_PUSH_CARD:// 发牌阶段
-					this.cardsDeal();
+					if (this._isNormalDeal) {
+						this.cardsDeal();
+					}
 					break;
 				case MAP_STATUS.PLAY_STATUS_SHOW_CARD:// 开牌阶段
 					for (let i = 0; i < CARDS_COUNT; i++) {

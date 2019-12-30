@@ -188,12 +188,12 @@ module gamebrniuniu.page {
                 //全面屏
                 if (this._game.isFullScreen) {
                     this._viewUI.box_top_left.left = 14 + 56;
-                    // this._viewUI.box_room_left.left = 105 + 56;
+                    // this._viewUI.box_room_left.left = 115 + 56;
                     this._viewUI.box_top_right.right = 28 + 56;
                     this._viewUI.box_bottom_right.right = 12 + 56;
                 } else {
                     this._viewUI.box_top_left.left = 14;
-                    // this._viewUI.box_room_left.left = 105;
+                    // this._viewUI.box_room_left.left = 115;
                     this._viewUI.box_top_right.right = 28;
                     this._viewUI.box_bottom_right.right = 12;
                 }
@@ -302,7 +302,7 @@ module gamebrniuniu.page {
                 let headImg = mainUnit.GetHeadImg();
                 this._viewUI.main_player.txt_name.text = getMainPlayerName(mainUnit.GetName());
                 if (this._curStatus != MAP_STATUS.PLAY_STATUS_SETTLE) {
-                    this._viewUI.main_player.txt_money.text = EnumToString.getPointBackNum(mainUnit.GetMoney(), 2).toString();
+                    this._viewUI.main_player.txt_money.text = EnumToString.getPointBackNum(TongyongUtil.getMoneyChange(mainUnit.GetMoney()), 2).toString();
                 }
                 if (this._game.sceneObjectMgr.mainUnit.GetIndex() == this._niuMapInfo.GetBankerSeat()) {
                     this._viewUI.btn_repeat.disabled = true;
@@ -357,7 +357,7 @@ module gamebrniuniu.page {
                     seat.img_txk.visible = true;
                     seat.txt_name.text = getMainPlayerName(unit.GetName());
                     if (this._curStatus != MAP_STATUS.PLAY_STATUS_SETTLE) {
-                        seat.txt_money.text = EnumToString.getPointBackNum(unit.GetMoney(), 2).toString();
+                        seat.txt_money.text = EnumToString.getPointBackNum(TongyongUtil.getMoneyChange(unit.GetMoney()), 2).toString();
                     }
                     seat.txt_name.fontSize = 15;
                     seat.img_icon.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
@@ -398,7 +398,7 @@ module gamebrniuniu.page {
             if (!this._niuMapInfo) return;
             let mainUnit = this._game.sceneObjectMgr.mainUnit;
             if (mainUnit) {
-                let money = EnumToString.getPointBackNum(mainUnit.GetMoney(), 2);
+                let money = EnumToString.getPointBackNum(TongyongUtil.getMoneyChange(mainUnit.GetMoney()), 2);
                 this._viewUI.main_player.txt_money.text = money.toString();
             }
             let seatedList = this._niuMapInfo.GetSeatedList();
@@ -413,7 +413,7 @@ module gamebrniuniu.page {
                 let unit = this._game.sceneObjectMgr.getUnitByIdx(unitIndex);
                 let seat = this._seatUIList[i];
                 if (unit) {
-                    seat.txt_money.text = EnumToString.getPointBackNum(unit.GetMoney(), 2).toString();
+                    seat.txt_money.text = EnumToString.getPointBackNum(TongyongUtil.getMoneyChange(unit.GetMoney()), 2).toString();
                 }
             }
         }
@@ -1125,7 +1125,7 @@ module gamebrniuniu.page {
             let bankerUnit = this._game.sceneObjectMgr.getUnitByIdx(this._niuMapInfo.GetBankerSeat());
             let limitMoney = 0;
             if (bankerUnit) {
-                limitMoney = bankerUnit.GetMoney() / 4;
+                limitMoney = TongyongUtil.getMoneyChange(bankerUnit.GetMoney()) / 4;
                 let allTotal = this._betTotal0 + this._betTotal1 + this._betTotal2 + this._betTotal3;
                 if (allTotal > limitMoney) {
                     this._game.uiRoot.topUnder.showTips("当前下注总额超出牌局可下注额度，无法下注~");
@@ -1136,11 +1136,11 @@ module gamebrniuniu.page {
             for (let i = 0; i < this._rebetList.length; i++) {
                 total += this._rebetList[i];
             }
-            if (total > this._game.sceneObjectMgr.mainUnit.GetMoney()) {
+            let money = TongyongUtil.getMoneyChange(this._game.sceneObjectMgr.mainUnit.GetMoney());
+            if (total > money) {
                 this._game.uiRoot.topUnder.showTips("老板,您的金币不够重复下注啦~");
                 return;
             }
-            let money = this._game.sceneObjectMgr.mainUnit.GetMoney();
             let betBefore = this._betMain0 + this._betMain1 + this._betMain2 + this._betMain3;
             limitMoney = (money + betBefore) / 4;
             if (total + betBefore > limitMoney) {
@@ -1209,13 +1209,13 @@ module gamebrniuniu.page {
             let limitMoney = 0;
             if (bankerUnit) {
                 let allTotal = this._betTotal0 + this._betTotal1 + this._betTotal2 + this._betTotal3;
-                limitMoney = bankerUnit.GetMoney() / 4;
+                limitMoney = TongyongUtil.getMoneyChange(bankerUnit.GetMoney()) / 4;
                 if (allTotal > limitMoney) {
                     this._game.uiRoot.topUnder.showTips("当前下注总额超出牌局可下注额度，无法下注~");
                     return;
                 }
             }
-            let money = this._game.sceneObjectMgr.mainUnit.GetMoney();
+            let money = TongyongUtil.getMoneyChange(this._game.sceneObjectMgr.mainUnit.GetMoney());
             let betBefore = this._betMain0 + this._betMain1 + this._betMain2 + this._betMain3;
             limitMoney = (money + betBefore) / 4;
             if (this._curChip + betBefore > limitMoney) {
@@ -1253,7 +1253,7 @@ module gamebrniuniu.page {
 
         //选择筹码
         private onSelectChip(index: number): void {
-            if (this._game.sceneObjectMgr.mainUnit && this._game.sceneObjectMgr.mainUnit.GetMoney() < this._chipArr[0]) {
+            if (this._game.sceneObjectMgr.mainUnit && TongyongUtil.getMoneyChange(this._game.sceneObjectMgr.mainUnit.GetMoney()) < this._chipArr[0]) {
                 this._curChip = -1;
                 for (let i: number = 0; i < this._chipUIList.length; i++) {
                     this._chipUIList[i].y = this._curChipY;
@@ -1278,7 +1278,7 @@ module gamebrniuniu.page {
         private onChipDisabled(isBetState: boolean): void {
             this._viewUI.btn_repeat.disabled = !isBetState;
             if (isBetState) {
-                if (this._curChip == -1 && this._game.sceneObjectMgr.mainUnit.GetMoney() >= this._chipArr[0]) {
+                if (this._curChip == -1 && TongyongUtil.getMoneyChange(this._game.sceneObjectMgr.mainUnit.GetMoney()) >= this._chipArr[0]) {
                     this._curChip = this._chipArr[0];
                 }
                 Laya.Tween.to(this._viewUI.btn_repeat, { y: this._btnRepeatY }, 300);
@@ -1311,7 +1311,7 @@ module gamebrniuniu.page {
         private _isTweenOver: boolean = false;
         private onUpdateChipGrey() {
             if (!this._game.sceneObjectMgr.mainUnit) return;
-            let money: number = this._game.sceneObjectMgr.mainUnit.GetMoney();
+            let money: number = TongyongUtil.getMoneyChange(this._game.sceneObjectMgr.mainUnit.GetMoney());
             let curMaxChipIndex: number = -1;
             for (let i = 0; i < this._chipUIList.length; i++) {
                 let index = this._chipUIList.length - 1 - i;
@@ -1342,7 +1342,7 @@ module gamebrniuniu.page {
                 this._game.uiRoot.topUnder.showTips("老板，您是庄家哦~不能入座啦~");
                 return;
             }
-            if (mainUnit.GetMoney() < this._seatlimit) {
+            if (TongyongUtil.getMoneyChange(mainUnit.GetMoney()) < this._seatlimit) {
                 this._game.uiRoot.topUnder.showTips("金币不足");
                 return;
             }
@@ -1531,7 +1531,7 @@ module gamebrniuniu.page {
                 this._viewUI.icon_banker.skin = this._bankerHead;
                 this._viewUI.txt_zhuangjia.text = this._bankerName;
                 this._viewUI.txt_lianzhuang.text = bankerUnit.GetLzNum().toString();
-                let money = EnumToString.getPointBackNum(bankerUnit.GetMoney(), 2);
+                let money = EnumToString.getPointBackNum(TongyongUtil.getMoneyChange(bankerUnit.GetMoney()), 2);
                 this._viewUI.txt_zhuangMoney.text = money.toString();
                 this._viewUI.box_lianzhuang.visible = true;
             } else {
@@ -1539,7 +1539,7 @@ module gamebrniuniu.page {
                 this._bankerName = "牛魔王"
                 this._viewUI.icon_banker.skin = this._bankerHead;
                 this._viewUI.txt_zhuangjia.text = this._bankerName;
-                this._viewUI.txt_zhuangMoney.text = this._niuMapInfo.GetMoney().toString();
+                this._viewUI.txt_zhuangMoney.text = TongyongUtil.getMoneyChange(this._niuMapInfo.GetMoney()).toString();
                 this._viewUI.box_lianzhuang.visible = false;
             }
             if (data == 1 && !this._isFirstOpen) {

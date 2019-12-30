@@ -45,7 +45,7 @@ module gamebrniuniu.page {
 				case this._viewUI.btn_shangzhuang://申请上庄
 					let mainUnit = this._game.sceneObjectMgr.mainUnit;
 					if (!mainUnit) return;
-					let money = mainUnit.GetMoney();
+					let money = TongyongUtil.getMoneyChange(mainUnit.GetMoney());
 					if (money < this.dataSource) {
 						this._game.uiRoot.topUnder.showTips("金币不足");
 						return;
@@ -134,7 +134,7 @@ module gamebrniuniu.page {
 				this.clip_money.parent.addChild(this._clipMoney);
 				this.clip_money.visible = false;
 			}
-			this._clipMoney.setText(EnumToString.getPointBackNum(this._unit.GetMoney(), 2) + "", true, false);
+			this._clipMoney.setText(EnumToString.getPointBackNum(TongyongUtil.getMoneyChange(this._unit.GetMoney()), 2) + "", true, false);
 		}
 	}
 }
