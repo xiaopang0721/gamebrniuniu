@@ -100,9 +100,9 @@ module gamebrniuniu.page {
             this._delta = 1000;
             this._asset = [
                 DatingPath.atlas_dating_ui + "qifu.atlas",
-                PathGameTongyong.atlas_game_ui_tongyong + "qifu.atlas",
                 Path_game_brniuniu.atlas_game_ui + "brniuniu.atlas",
                 Path_game_brniuniu.atlas_game_ui_brniuniu + "niupai.atlas",
+                PathGameTongyong.atlas_game_ui_tongyong + "qifu.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "pai.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "touxiang.atlas",
@@ -110,7 +110,6 @@ module gamebrniuniu.page {
                 PathGameTongyong.atlas_game_ui_tongyong + "nyl.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "yq.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong_general + "anniu.atlas",
-                PathGameTongyong.atlas_game_ui_tongyong_general_effect + "suiji.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong_general_effect + "fapai_1.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong_general_effect + "xipai.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong_general_effect + "kaipai.atlas",
